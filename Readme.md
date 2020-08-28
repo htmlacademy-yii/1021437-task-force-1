@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Богдан Моисеенко](https://up.htmlacademy.ru/yii/1/user/1021437).
-* Наставник: `Неизвестно`.
+* Наставник: [Анатолий Пашин](https://htmlacademy.ru/profile/id1200767).
 
 ---
 
