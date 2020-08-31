@@ -5,10 +5,10 @@ use Task\handler\Task;
 
 require_once 'vendor/autoload.php';
 
-$newTask = new Task('1', '2', 0);
+$newTask = new Task('1', '2', 1);
 
-echo $newTask->getNextStatus('cancel') . '<br>';
+echo $newTask->getNextStatus('respond') . '<br>';
 
-assert($newTask->getNextStatus('failed') == Task::MAP_STATUSES_NAME[Task::STATUS_FAILED], 'Данные не совпадают');
+assert($newTask->getNextStatus('respond') == Task::STATUS_IN_WORK, 'Данные не совпадают');
 
-echo $newTask->getActionsFromStatus('в работе') . '<br>';
+echo $newTask->getActionsFromStatus('in_work') . '<br>';

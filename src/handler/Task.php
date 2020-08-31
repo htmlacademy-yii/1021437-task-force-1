@@ -1,20 +1,19 @@
 <?php
 
-
 namespace Task\handler;
 
 class Task
 {
     const STATUS_NEW = 'new';
-    const STATUS_CANCEL = 'cancel';
+    const STATUS_CANCEL = 'canceled';
     const STATUS_IN_WORK = 'in_work';
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILED = 'failed';
 
     const ACTION_CANCEL = 'cancel';
-    const ACTION_REFUSE = 'failed';
+    const ACTION_REFUSE = 'deny';
     const ACTION_RESPOND = 'respond';
-    const ACTION_SUCCESS = 'success';
+    const ACTION_SUCCESS = 'done';
 
     const MAP_STATUSES_NAME = [
         self::STATUS_NEW => 'новое',
@@ -24,7 +23,7 @@ class Task
         self::STATUS_FAILED => 'провалено',
     ];
 
-    const MAP_ACTION_NAME = [
+    const MAP_ACTIONS_NAME = [
         self::ACTION_CANCEL => 'отменить',
         self::ACTION_SUCCESS => 'выполнено',
         self::ACTION_REFUSE => 'отказаться',
@@ -32,10 +31,10 @@ class Task
     ];
 
     const MAP_STATUSES = [
-        self::ACTION_CANCEL => self::MAP_STATUSES_NAME[self::STATUS_CANCEL],
-        self::ACTION_SUCCESS => self::MAP_STATUSES_NAME[self::STATUS_SUCCESS],
-        self::ACTION_REFUSE => self::MAP_STATUSES_NAME[self::STATUS_FAILED],
-        self::ACTION_RESPOND => self::MAP_STATUSES_NAME[self::STATUS_IN_WORK],
+        self::ACTION_CANCEL => self::STATUS_CANCEL,
+        self::ACTION_SUCCESS => self::STATUS_SUCCESS,
+        self::ACTION_REFUSE => self::STATUS_FAILED,
+        self::ACTION_RESPOND => self::STATUS_IN_WORK,
     ];
 
     private $id_performer;
@@ -44,12 +43,12 @@ class Task
 
     const MAP_STATUSES_AND_ACTIONS = [
         0 => [
-            self::MAP_STATUSES_NAME[self::STATUS_NEW] => self::ACTION_CANCEL,
-            self::MAP_STATUSES_NAME[self::STATUS_IN_WORK] => self::ACTION_SUCCESS
+            self::STATUS_NEW => self::ACTION_CANCEL,
+            self::STATUS_IN_WORK => self::ACTION_SUCCESS
         ],
         1 => [
-            self::MAP_STATUSES_NAME[self::STATUS_NEW] => self::ACTION_RESPOND,
-            self::MAP_STATUSES_NAME[self::STATUS_IN_WORK] => self::ACTION_REFUSE
+            self::STATUS_NEW => self::ACTION_RESPOND,
+            self::STATUS_IN_WORK => self::ACTION_REFUSE
         ]
     ];
 
@@ -67,20 +66,17 @@ class Task
 
     public function getMapActions()
     {
-        return self::MAP_ACTION_NAME;
+        return self::MAP_ACTIONS_NAME;
     }
 
     public function getNextStatus($action)
     {
-        return array_key_exists($action, self::MAP_STATUSES) ? self::MAP_STATUSES[$action] : '';
+        return isset(self::MAP_STATUSES[$action]) ? self::MAP_STATUSES[$action] : '';
     }
 
     public function getActionsFromStatus($status)
     {
-        if (in_array($status, self::MAP_STATUSES_NAME)) {
-            $action = self::MAP_STATUSES_AND_ACTIONS[$this->role][$status] ?? '';
-            return isset(self::MAP_ACTION_NAME[$action]) ? self::MAP_ACTION_NAME[$action] : 'Нет действий';
-        }
-        return null;
+        return isset(self::MAP_STATUSES_AND_ACTIONS[$this->role][$status]) ?
+            self::MAP_STATUSES_AND_ACTIONS[$this->role][$status] : '';
     }
 }
