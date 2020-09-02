@@ -1,6 +1,6 @@
 <?php
 
-namespace Task\handler;
+namespace Task\classes;
 
 class Task
 {

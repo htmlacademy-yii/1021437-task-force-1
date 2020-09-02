@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 
-use Task\handler\Task;
+use Task\classes\Task;
 
 require_once 'vendor/autoload.php';
 
