@@ -1,0 +1,20 @@
+{
+    "name": "htmlacademy/taskforce",
+    "description": "Training project on Yii2",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bogdan Moiseenko",
+            "email": "moiseenkob@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "squizlabs/php_codesniffer": "*"
+    },
+    "autoload": {
+      "psr-4": {
+        "Task\\": "src/"
+      }
+    }
+}
