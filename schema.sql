@@ -22,7 +22,7 @@ CREATE TABLE `tf_categories` (
 -- Создание таблицы с пользователями
 CREATE TABLE `tf_users` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `fio` VARCHAR(255) NOT NULL COMMENT 'фио пользователя',
+    `name` VARCHAR(255) NOT NULL COMMENT 'фио пользователя',
     `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'email пользователя',
     `city_id` INT NOT NULL COMMENT 'id города проживания пользователя',
     `birthday_at` TIMESTAMP NULL COMMENT 'дата рождения',
