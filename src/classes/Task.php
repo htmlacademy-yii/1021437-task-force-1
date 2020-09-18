@@ -37,26 +37,26 @@ class Task
         self::ACTION_RESPOND => self::STATUS_IN_WORK,
     ];
 
-    private $id_performer;
-    private $id_client;
-    private $role;
+    private $executor_id;
+    private $client_id;
+    private $current_user;
+    private $action;
 
     const MAP_STATUSES_AND_ACTIONS = [
-        0 => [
-            self::STATUS_NEW => self::ACTION_CANCEL,
-            self::STATUS_IN_WORK => self::ACTION_SUCCESS
-        ],
-        1 => [
-            self::STATUS_NEW => self::ACTION_RESPOND,
-            self::STATUS_IN_WORK => self::ACTION_REFUSE
-        ]
+        self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
+        self::STATUS_IN_WORK => [self::ACTION_SUCCESS, self::ACTION_REFUSE]
     ];
 
-    public function __construct($id_client, $id_performer, $role)
+    public function __construct($client_id, $executor_id, $current_user)
     {
-        $this->id_client = $id_client;
-        $this->id_performer = $id_performer;
-        $this->role = $role;
+        $this->client_id = $client_id;
+        $this->executor_id = $executor_id;
+        $this->current_user = $current_user;
+
+        $this->action['cancel'] = new CancelAction();
+        $this->action['deny'] = new RefuseAction();
+        $this->action['respond'] = new RespondAction();
+        $this->action['done'] = new SuccessAction();
     }
 
     public function getMapStatuses()
@@ -76,7 +76,11 @@ class Task
 
     public function getActionsFromStatus($status)
     {
-        return isset(self::MAP_STATUSES_AND_ACTIONS[$this->role][$status]) ?
-            self::MAP_STATUSES_AND_ACTIONS[$this->role][$status] : '';
+        foreach (self::MAP_STATUSES_AND_ACTIONS[$status] as $action) {
+            if ($this->action[$action]->checkRule($this->client_id, $this->executor_id, $this->current_user)) {
+                return $this->action[$action];
+            }
+        }
+        return null;
     }
 }
