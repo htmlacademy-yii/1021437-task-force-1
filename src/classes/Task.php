@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Task\classes;
 
+use Task\classes\actions\AbstractAction;
 use Task\classes\actions\CancelAction;
 use Task\classes\actions\RefuseAction;
 use Task\classes\actions\RespondAction;
@@ -49,7 +50,7 @@ class Task
     private $executorId;
     private $clientId;
     private $currentUser;
-    private $action;
+    public $actions = [];
     private $status;
 
     const MAP_STATUSES_AND_ACTIONS = [
@@ -63,16 +64,18 @@ class Task
         $this->executorId = $executorId;
         $this->currentUser = $currentUser;
 
-        $this->action['cancel'] = new CancelAction();
-        $this->action['deny'] = new RefuseAction();
-        $this->action['respond'] = new RespondAction();
-        $this->action['done'] = new SuccessAction();
+        $this->actions = [
+            'cancel' => new CancelAction(),
+            'deny' =>new RefuseAction(),
+            'respond' => new RespondAction(),
+            'done' => new SuccessAction()
+        ];
 
         if (!array_key_exists($status, self::MAP_STATUSES_NAME)) {
             throw new IncorrectStatusException('Не правильный указан статус');
-        } else {
-            $this->status = $status;
         }
+
+        $this->status = $status;
     }
 
     public function getMapStatuses(): array
@@ -93,14 +96,14 @@ class Task
         return isset(self::MAP_STATUSES[$action]) ? self::MAP_STATUSES[$action] : '';
     }
 
-    public function getActionsFromStatus(): ?object
+    public function getActionsFromStatus(): ?AbstractAction
     {
         if ($this->currentUser !== $this->clientId && $this->executorId !== $this->currentUser) {
             throw new IncorrectRoleException('Нет такой роли у пользователя');
         }
         foreach (self::MAP_STATUSES_AND_ACTIONS[$this->status] as $action) {
-            if ($this->action[$action]->checkRule($this->clientId, $this->executorId, $this->currentUser)) {
-                return $this->action[$action];
+            if ($this->actions[$action]->checkRule($this->clientId, $this->executorId, $this->currentUser)) {
+                return $this->actions[$action];
             }
         }
         return null;
