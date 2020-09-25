@@ -1,6 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Task\classes;
+
+use Task\classes\actions\AbstractAction;
+use Task\classes\actions\CancelAction;
+use Task\classes\actions\RefuseAction;
+use Task\classes\actions\RespondAction;
+use Task\classes\actions\SuccessAction;
+use Task\classes\exceptions\IncorrectRoleException;
+use Task\classes\exceptions\IncorrectStatusException;
+use Task\classes\exceptions\IncorrectActionException;
 
 class Task
 {
@@ -37,48 +47,63 @@ class Task
         self::ACTION_RESPOND => self::STATUS_IN_WORK,
     ];
 
-    private $executor_id;
-    private $client_id;
-    private $current_user;
-    private $action;
+    private $executorId;
+    private $clientId;
+    private $currentUser;
+    public $actions = [];
+    private $status;
 
     const MAP_STATUSES_AND_ACTIONS = [
         self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
         self::STATUS_IN_WORK => [self::ACTION_SUCCESS, self::ACTION_REFUSE]
     ];
 
-    public function __construct($client_id, $executor_id, $current_user)
+    public function __construct(int $clientId, int $executorId, int $currentUser, string $status)
     {
-        $this->client_id = $client_id;
-        $this->executor_id = $executor_id;
-        $this->current_user = $current_user;
+        $this->clientId = $clientId;
+        $this->executorId = $executorId;
+        $this->currentUser = $currentUser;
 
-        $this->action['cancel'] = new CancelAction();
-        $this->action['deny'] = new RefuseAction();
-        $this->action['respond'] = new RespondAction();
-        $this->action['done'] = new SuccessAction();
+        $this->actions = [
+            'cancel' => new CancelAction(),
+            'deny' =>new RefuseAction(),
+            'respond' => new RespondAction(),
+            'done' => new SuccessAction()
+        ];
+
+        if (!array_key_exists($status, self::MAP_STATUSES_NAME)) {
+            throw new IncorrectStatusException('Не правильный указан статус');
+        }
+
+        $this->status = $status;
     }
 
-    public function getMapStatuses()
+    public function getMapStatuses(): array
     {
         return self::MAP_STATUSES_NAME;
     }
 
-    public function getMapActions()
+    public function getMapActions(): array
     {
         return self::MAP_ACTIONS_NAME;
     }
 
-    public function getNextStatus($action)
+    public function getNextStatus(string $action): string
     {
+        if (!isset(self::MAP_STATUSES[$action])) {
+            throw new IncorrectActionException('Такого действия не существует');
+        }
         return isset(self::MAP_STATUSES[$action]) ? self::MAP_STATUSES[$action] : '';
     }
 
-    public function getActionsFromStatus($status)
+    public function getActionsFromStatus(): ?AbstractAction
     {
-        foreach (self::MAP_STATUSES_AND_ACTIONS[$status] as $action) {
-            if ($this->action[$action]->checkRule($this->client_id, $this->executor_id, $this->current_user)) {
-                return $this->action[$action];
+        if ($this->currentUser !== $this->clientId && $this->executorId !== $this->currentUser) {
+            throw new IncorrectRoleException('Нет такой роли у пользователя');
+        }
+        foreach (self::MAP_STATUSES_AND_ACTIONS[$this->status] as $action) {
+            if ($this->actions[$action]->checkRule($this->clientId, $this->executorId, $this->currentUser)) {
+                return $this->actions[$action];
             }
         }
         return null;
