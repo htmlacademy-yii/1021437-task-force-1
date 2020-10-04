@@ -97,15 +97,16 @@ $fixtureList = [
 file_put_contents('./generalDataSet.sql', '');
 
 try {
+    $dataSet = new CsvConverter();
     foreach ($fixtureList as $fixture) {
-        $fixture = new CsvConverter(
+        $dataSet->import(
             $fixture[0],
             $fixture[1],
             $fixture[2],
             $fixture[3],
             $fixture[4]
         );
-        $fixture->import();
+
     }
 } catch (NoFileException $e) {
     error_log("Ошибка при открытии файла: " . $e->getMessage());

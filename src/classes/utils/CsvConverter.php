@@ -19,13 +19,13 @@ class CsvConverter
     private $columns;
     private $numberGeneratedFields;
 
-    public function __construct(
+    public function import(
         string $fileName,
         string $fileNameConverter,
         string $tableName,
         array $columns,
         array $numberGeneratedFields = null
-    ) {
+    ): void {
         $this->fileName = $fileName;
         $this->fileNameConverter = $fileNameConverter;
         $this->tableName = "`{$tableName}`";
@@ -35,18 +35,8 @@ class CsvConverter
         if (!file_exists($this->fileName)) {
             throw new NoFileException('Файл не существует');
         }
-    }
 
-    /**
-     * Функция обработки файла и записи:
-     * Каждая фикстура в своем файле
-     * Все фикстуры для удобства импорта в 1 файле
-     * @throws EmptyFileException
-     */
-    public function import(): void
-    {
         $this->fileObject = new SplFileObject($this->fileName);
-
         if ($this->fileObject->getSize() === 0) {
             throw new EmptyFileException('Файл пустой');
         }
@@ -54,6 +44,8 @@ class CsvConverter
         if (empty($this->columns)) {
             throw new EmptyFileException('Пустой массив заголовков');
         }
+
+        $this->fileObject->setFlags(SplFileObject::READ_CSV);
 
         $this->headers = $this->getHeader($this->columns);
 
@@ -63,7 +55,7 @@ class CsvConverter
 
         $this->templateInsert = $this->collectFullRequest($this->tableName, $this->headers, $this->parseText);
         $this->writeToFile($this->templateInsert, $this->fileNameConverter, 'w');
-        $this->writeToFile($this->templateInsert, 'generalDataSet.sql', 'a', "\r");
+        $this->writeToFile($this->templateInsert, 'generalDataSet.sql', 'a', PHP_EOL);
     }
 
     /**
@@ -142,12 +134,9 @@ class CsvConverter
      */
     private function getNextLine(): iterable
     {
-        $result = null;
         while (!$this->fileObject->eof()) {
             yield $this->fileObject->fgetcsv(',');
         }
-
-        return $result;
     }
 
     /**
@@ -205,5 +194,4 @@ class CsvConverter
             fwrite($file, $data .';');
         }
     }
-
 }
