@@ -25,19 +25,27 @@ CREATE TABLE `tf_users` (
     `name` VARCHAR(255) NOT NULL COMMENT 'фио пользователя',
     `email` VARCHAR(255) NOT NULL UNIQUE COMMENT 'email пользователя',
     `city_id` INT NOT NULL COMMENT 'id города проживания пользователя',
-    `birthday_at` TIMESTAMP NULL COMMENT 'дата рождения',
-    `user_info` TEXT NOT NULL COMMENT 'контактная информация',
     `registration_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'дата и время регистрации',
     `password` VARCHAR(255) NOT NULL COMMENT 'зашифрованный пароль',
+    FOREIGN KEY (`city_id`) REFERENCES `tf_cities` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- Создание таблицы с пользователями
+CREATE TABLE `tf_profiles` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL COMMENT 'id пользователя',
+    `address` TEXT NULL COMMENT 'адресс проживания',
+    `birthday_at` DATETIME NULL COMMENT 'дата рождения',
+    `user_info` TEXT COMMENT 'контактная информация',
     `rating` FLOAT UNSIGNED NULL COMMENT 'рейтинг пользователя',
     `views_account` INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'количество просмотров профиля пользователя',
-    `avatar` VARCHAR(255) NOT NULL COMMENT 'аватар пользователя',
-    `phone` CHAR(11) NOT NULL COMMENT 'телефон пользователя',
-    `skype` VARCHAR(128) NOT NULL COMMENT 'skype пользователя',
-    `telegram` VARCHAR(128) NOT NULL COMMENT 'telegram пользователя',
+    `avatar` VARCHAR(255) COMMENT 'аватар пользователя',
+    `phone` CHAR(11) COMMENT 'телефон пользователя',
+    `skype` VARCHAR(128) COMMENT 'skype пользователя',
+    `telegram` VARCHAR(128) COMMENT 'telegram пользователя',
     `last_visit` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'дата и время последней активности',
     `counter_of_failed_tasks` INT DEFAULT 0 COMMENT 'количество проваленных заданий',
-    FOREIGN KEY (`city_id`) REFERENCES `tf_cities` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `tf_users` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- Создание таблицы с настройками пользователя
@@ -77,6 +85,7 @@ CREATE TABLE `tf_tasks` (
     `category_id` INT NOT NULL COMMENT 'id категории объявления',
     `status` ENUM('new', 'canceled', 'in_work', 'success', 'failed') DEFAULT 'new' COMMENT 'статус задачи',
     `budget` INT UNSIGNED COMMENT 'бюджет',
+    `address` TEXT NULL COMMENT 'адресс выполнения задачи',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'дата и время создания задачи',
     `start_at` TIMESTAMP COMMENT 'дата и время начала выполнения задачи',
     `city_id` INT COMMENT 'id города',
