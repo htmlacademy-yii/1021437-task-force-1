@@ -69,7 +69,7 @@ class CsvConverter
     {
         $lineText = null;
         $text = null;
-        foreach ($this->getNextLine() as $data) {
+        foreach ($this->fileObject as $data) {
             if ($object->key() != 0) {
                 $lineText = implode(', ', array_map(function ($item) {
                     $item = !empty($item) ? "'{$item}'" : null;
@@ -95,9 +95,9 @@ class CsvConverter
         $textInsert = null;
         if (!empty($data) && !empty($countField)) {
             $textInsert = '(' . $data . ', ' .
-                $this->createStringFromNumbers($countField) .'), ' . "\r" . "\t";
+                $this->createStringFromNumbers($countField) .'), ' . PHP_EOL . "\t";
         } elseif (!empty($data) && is_null($countField)) {
-            $textInsert = '(' . $data . '), ' . "\r" . "\t";
+            $textInsert = '(' . $data . '), ' . PHP_EOL . "\t";
         }
 
         return $textInsert;
@@ -126,17 +126,6 @@ class CsvConverter
     private function removeWasteCharacters(string $text): string
     {
         return substr(rtrim($text), 0, -1);
-    }
-
-    /**\
-     * Функция прохода по файлу
-     * @return iterable
-     */
-    private function getNextLine(): iterable
-    {
-        while (!$this->fileObject->eof()) {
-            yield $this->fileObject->fgetcsv(',');
-        }
     }
 
     /**
@@ -174,8 +163,8 @@ class CsvConverter
     private function collectFullRequest(string $tableName, string $column, string $data): string
     {
         return "INSERT INTO {$tableName} "
-            . "\r" . "\t({$column})" . "\r"
-            . "VALUES " . "\r" . "\t" . $data;
+            . PHP_EOL . "\t({$column})" . PHP_EOL
+            . "VALUES " . PHP_EOL . "\t" . $data;
     }
 
     /**

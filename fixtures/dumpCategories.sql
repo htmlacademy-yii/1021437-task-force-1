@@ -1,1 +1,11 @@
-INSERT INTO `tf_categories` 	(`name`, `category_icon`)VALUES 	('Переводы', 'translation'), 	('Уборка', 'clean'), 	('Переезды', 'cargo'), 	('Компьютерная помощь', 'neo'), 	('Ремонт квартирный', 'flat'), 	('Ремонт техники', 'repair'), 	('Красота', 'beauty'), 	('Фото', 'photo');
+INSERT INTO `tf_categories` 
+	(`name`, `category_icon`)
+VALUES 
+	('Переводы', 'translation'), 
+	('Уборка', 'clean'), 
+	('Переезды', 'cargo'), 
+	('Компьютерная помощь', 'neo'), 
+	('Ремонт квартирный', 'flat'), 
+	('Ремонт техники', 'repair'), 
+	('Красота', 'beauty'), 
+	('Фото', 'photo');
