@@ -55,7 +55,7 @@ class CsvConverter
 
         $this->templateInsert = $this->collectFullRequest($this->tableName, $this->headers, $this->parseText);
         $this->writeToFile($this->templateInsert, $this->fileNameConverter, 'w');
-        $this->writeToFile($this->templateInsert, 'generalDataSet.sql', 'a', PHP_EOL);
+        $this->writeToFile($this->templateInsert, 'generalData.sql', 'a', PHP_EOL);
     }
 
     /**

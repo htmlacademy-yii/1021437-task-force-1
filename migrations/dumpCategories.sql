@@ -1,4 +1,4 @@
-INSERT INTO `tf_categories` 
+INSERT INTO `category` 
 	(`name`, `category_icon`)
 VALUES 
 	('Переводы', 'translation'), 
