@@ -1,4 +1,4 @@
-INSERT INTO `tf_cities` 
+INSERT INTO `city` 
 	(`city`, `latitude_y`, `longitude_x`)
 VALUES 
 	('Абаза', '52.6517296', '90.0885929'), 
