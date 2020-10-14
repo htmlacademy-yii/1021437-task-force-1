@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use frontend\models\User;
 use yii\db\Query;
 use yii\web\Controller;
 
@@ -10,7 +11,7 @@ class UsersController extends Controller
     public function actionIndex()
     {
 
-        $users = (new Query())->select(
+/*        $users = (new Query())->select(
             [
                 'u.name',
                 'u.registration_at',
@@ -27,8 +28,35 @@ class UsersController extends Controller
             ->where('exists(SELECT * FROM user_category WHERE user_id = u.id)')
             ->groupBy('u.id')
             ->orderBy('u.registration_at desc')
+            ->all();*/
+
+        $users = User::find()
+//            ->select([
+//                'user.*',
+//                'count(task.id) as count_task',
+//                'count(feedback.id) AS feedback_count',
+//            ])
+            ->with('tasks0')
+            ->leftJoin('feedback', 'feedback.author_id = user.id')
+            ->with('profile')
+            ->with('feedbacks')
+            ->with('userCategories.categories')
+            ->where('exists(SELECT * FROM user_category WHERE user_id = user.id)')
+            ->groupBy('user.id')
+            ->orderBy('user.registration_at DESC')
             ->all();
 
+//        $users = User::find()
+////            ->select([
+////                'user.*',
+////                'count(task.id) as count_task',
+////            ])
+//            ->with('tasks0')
+//            ->where('exists(SELECT * FROM user_category WHERE user_id = user.id)')
+//            ->groupBy('user.id')
+//            ->all();
+//        echo "<pre>".print_r($users, 1)."</pre>";
+//        die();
         return $this->render('index', compact('users'));
     }
 

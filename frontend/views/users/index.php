@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @var $users array
+ */
 use yii\helpers\Html;
 
 $this->title = 'Исполнители на Task-Force';
@@ -21,26 +23,27 @@ $this->title = 'Исполнители на Task-Force';
         </ul>
     </div>
     <?php foreach ($users as $user): ?>
+<!--    --><?php //echo "<pre>".print_r($user, 1)."</pre>";die(); ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                    <span><?= $user['count_task']; ?> заданий</span>
-                    <span><?= $user['count_feedback']; ?> отзывов</span>
+                    <span><?= count($user->tasks0); ?> заданий</span>
+                    <span><?= count($user->feedbacks); ?> отзывов</span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="#" class="link-regular"><?= Html::encode($user['name']); ?></a></p>
+                    <p class="link-name"><a href="#" class="link-regular"><?= Html::encode($user->name); ?></a></p>
                     <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                    <b><?= $user['rating'] ?? 0; ?></b>
+                    <b><?= $user->profile->rating ?? 0; ?></b>
                     <p class="user__search-content">
-                        <?= Html::encode($user['info']); ?>
+                        <?= Html::encode($user->profile->user_info); ?>
                     </p>
                 </div>
-                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($user['last_visit']); ?></span>
+                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($user->profile->last_visit); ?></span>
             </div>
             <div class="link-specialization user__search-link--bottom">
-                <?php foreach (explode(',', $user['categories']) as $category): ?>
-                    <a href="#" class="link-regular"><?= $category; ?></a>
+                <?php foreach ($user->userCategories as $category): ?>
+                    <a href="#" class="link-regular"><?= $category->categories->name; ?></a>
                 <?php endforeach; ?>
             </div>
         </div>

@@ -10,16 +10,16 @@ $this->title = 'Новые задачи';
         <?php foreach ($tasks as $task): ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="#" class="link-regular"><h2><?= Html::encode($task['title']); ?></h2></a>
-                    <a class="new-task__type link-regular" href="#"><p><?= Html::encode($task['name']); ?></p></a>
+                    <a href="#" class="link-regular"><h2><?= Html::encode($task->title); ?></h2></a>
+                    <a class="new-task__type link-regular" href="#"><p><?= $task->category->name; ?></p></a>
                 </div>
-                <div class="new-task__icon new-task__icon--<?= $task['category_icon']; ?>"></div>
+                <div class="new-task__icon new-task__icon--<?= $task->category->category_icon; ?>"></div>
                 <p class="new-task_description">
-                    <?= Html::encode($task['description']); ?>
+                    <?= Html::encode($task->description); ?>
                 </p>
-                <b class="new-task__price new-task__price--<?= $task['category_icon']; ?>"><?= Html::encode($task['budget']); ?><b> ₽</b></b>
-                <p class="new-task__place"><?= Html::encode($task['address']); ?></p>
-                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($task['created_at']); ?></span>
+                <b class="new-task__price new-task__price--<?= $task->category->category_icon; ?>"><?= Html::encode($task->budget); ?><b> ₽</b></b>
+                <p class="new-task__place"><?= Html::encode($task->address); ?></p>
+                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($task->created_at); ?></span>
             </div>
         <?php endforeach; ?>
     </div>
