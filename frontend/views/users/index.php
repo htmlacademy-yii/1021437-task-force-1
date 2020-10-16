@@ -3,7 +3,6 @@
  * @var $users array
  */
 use yii\helpers\Html;
-
 $this->title = 'Исполнители на Task-Force';
 
 ?>
@@ -23,13 +22,12 @@ $this->title = 'Исполнители на Task-Force';
         </ul>
     </div>
     <?php foreach ($users as $user): ?>
-<!--    --><?php //echo "<pre>".print_r($user, 1)."</pre>";die(); ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                    <span><?= count($user->tasks0); ?> заданий</span>
-                    <span><?= count($user->feedbacks); ?> отзывов</span>
+                    <span><?= $user->getTotalTasks(); ?> заданий</span>
+                    <span><?= $user->getTotalFeedbacks(); ?> отзывов</span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
                     <p class="link-name"><a href="#" class="link-regular"><?= Html::encode($user->name); ?></a></p>

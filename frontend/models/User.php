@@ -50,7 +50,13 @@ class User extends \yii\db\ActiveRecord
             [['registration_at'], 'safe'],
             [['name', 'email', 'password'], 'string', 'max' => 255],
             [['email'], 'unique'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::class, 'targetAttribute' => ['city_id' => 'id']],
+            [
+                ['city_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => City::class,
+                'targetAttribute' => ['city_id' => 'id']
+            ],
         ];
     }
 
@@ -187,6 +193,16 @@ class User extends \yii\db\ActiveRecord
     public function getUserAttachments()
     {
         return $this->hasMany(UserAttachment::class, ['user_id' => 'id']);
+    }
+
+    public function getTotalTasks()
+    {
+        return count($this->tasks0);
+    }
+
+    public function getTotalFeedbacks()
+    {
+        return count($this->feedbacks0);
     }
 
     /**
