@@ -33,7 +33,7 @@ CREATE TABLE `user` (
 -- Создание таблицы с пользователями
 CREATE TABLE `profile` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `user_id` INT NOT NULL COMMENT 'id пользователя',
+    `user_id` INT UNIQUE NOT NULL COMMENT 'id пользователя',
     `address` TEXT NULL COMMENT 'адресс проживания',
     `birthday_at` DATETIME NULL COMMENT 'дата рождения',
     `user_info` TEXT COMMENT 'контактная информация',
@@ -125,7 +125,7 @@ CREATE TABLE `feedback` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `author_id` INT NOT NULL COMMENT 'id автора заявки',
     `executor_id` INT NOT NULL COMMENT 'id исполнителя',
-    `task_id` INT NOT NULL COMMENT 'id задачи',
+    `task_id` INT UNIQUE NOT NULL COMMENT 'id задачи',
     `comment` TEXT NOT NULL COMMENT 'текстовый комментарий',
     `rating` TINYINT UNSIGNED COMMENT 'оценка',
     `status` ENUM('success', 'failed') NOT NULL COMMENT 'статус заявки',
