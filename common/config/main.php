@@ -16,5 +16,14 @@ return [
             'password' => 'kMfOdXaaOKUWVCvc',
             'charset' => 'utf8',
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'enableStrictParsing' => false,
+            'rules' => [
+                'tasks' => 'tasks/index',
+                'users' => 'users/index',
+            ],
+        ],
     ],
 ];
