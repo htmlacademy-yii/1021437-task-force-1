@@ -39,24 +39,26 @@ $this->title = 'Новые задачи';
 <section  class="search-task">
     <div class="search-task__wrapper">
         <?php $form = ActiveForm::begin([
-            'method' => 'post',
-            'options' => ['class' => 'search-task__form', 'name'=> "test"],
+            'method' => 'get',
+            'options' => ['class' => 'search-task__form', 'name' => 'test'],
+            'action' => ['/tasks/index'],
         ]); ?>
             <?= Html::beginTag('fieldset', ['class' => 'search-task__categories']) ?>
                 <?= Html::tag('legend', 'Категории'); ?>
-                <?= Html::activeCheckboxList(
-                    $model,
-                    'categories',
-                    $categories,
-                    [
-                        'unselect' => null,
-                        'tag' => false,
-                        'item' => function($index, $label, $name, $checked, $value) {
-                            return "<input class ='visually-hidden checkbox__input' id=$index type='checkbox' 
-                                    name=$name value=$value $checked><label for=$index>$label</label>";
-                        },
-                    ]
-                ) ?>
+            <?= Html::activeCheckboxList(
+                $model,
+                'categories',
+                $categories,
+                [
+                    'unselect' => null,
+                    'tag' => false,
+                    'item' => function($index, $label, $name, $checked, $value) {
+                        $checkedLabel = $checked ? 'checked' : '';
+                        return "<input class ='visually-hidden checkbox__input' id=$index $checkedLabel type='checkbox' 
+                                        name=$name value=$value $checked><label for=$index>$label</label>";
+                    },
+                ]
+            ) ?>
             <?= Html::endTag('fieldset'); ?>
             <?= Html::beginTag('fieldset', ['class' => 'search-task__categories']) ?>
                 <?= Html::tag('legend', 'Дополнительно'); ?>
@@ -81,10 +83,10 @@ $this->title = 'Новые задачи';
             <?= $form
                 ->field(
                     $model,
-                    'period',
+                    'defaultPeriod',
                     ['options' => ['tag' => false], 'template' => '{label}{input}']
                 )
-                ->dropDownList($model->period, [
+                ->dropDownList($model->periods, [
                     'options' => [
                         $model->defaultPeriod => ['Selected' => true],
                     ],
@@ -99,7 +101,7 @@ $this->title = 'Новые задачи';
                 ->textInput(
                     ['class' => 'input-middle input']
                 )
-                ->label($model->searchByName, ['class' => 'search-task__name']); ?>
+                ->label('ПОИСК ПО ИМЕНИ', ['class' => 'search-task__name']); ?>
             <?= Html::submitButton('Искать', ['class' => 'button']) ?>
         <?php ActiveForm::end(); ?>
     </div>
