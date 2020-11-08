@@ -3,6 +3,7 @@
  * @var $users array
  */
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Исполнители на Task-Force';
@@ -32,7 +33,11 @@ $typeSort = Yii::$app->request->get('sort');
                     <span><?= $user->getTotalFeedbacks(); ?> отзывов</span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="#" class="link-regular"><?= Html::encode($user->name); ?></a></p>
+                    <p class="link-name">
+                        <a href="<?= Url::to(['users/view', 'id' => $user->id]); ?>" class="link-regular">
+                            <?= Html::encode($user->name); ?>
+                        </a>
+                    </p>
                     <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
                     <b><?= $user->profile->rating ?? 0; ?></b>
                     <p class="user__search-content">
@@ -108,12 +113,12 @@ $typeSort = Yii::$app->request->get('sort');
                         'uncheck' => null],
                     false); ?>
             <?= Html::endTag('fieldset') ?>
-            <?= $form->field(
-                $model,
-                'searchByName',
-                ['options' => ['tag' => false], 'template' => '{label}{input}']
-            )->textInput(['class' => 'input-middle input'])
-            ->label('ПОИСК ПО ИМЕНИ', ['class' => 'search-task__name']); ?>
+            <?= $form
+                ->field(
+                    $model,
+                    'searchByName',
+                    ['options' => ['tag' => false], 'template' => '{label}{input}', 'labelOptions' => ['class' =>'search-task__name']]
+                )->textInput(['class' => 'input-middle input']); ?>
             <?= Html::submitButton('Искать', ['class' => 'button']) ?>
         <?php ActiveForm::end(); ?>
     </div>

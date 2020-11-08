@@ -91,9 +91,9 @@ class Task extends ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFeedbacks()
+    public function getFeedback()
     {
-        return $this->hasMany(Feedback::class, ['task_id' => 'id']);
+        return $this->hasOne(Feedback::class, ['task_id' => 'id']);
     }
 
     /**
@@ -114,6 +114,11 @@ class Task extends ActiveRecord
     public function getResponses()
     {
         return $this->hasMany(Response::class, ['task_id' => 'id']);
+    }
+
+    public function getTotalResponses()
+    {
+        return count($this->responses);
     }
 
     /**
