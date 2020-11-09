@@ -39,17 +39,6 @@ class SearchUsersForm extends ActiveRecord
         ];
     }
 
-    public function getCategories()
-    {
-        $categories = Category::find()->all();
-
-        $names = [];
-        foreach ($categories as $category) {
-            $names[$category->id] = $category->name;
-        }
-        return $names;
-    }
-
     public function getUsers($sort)
     {
         $users = User::find()

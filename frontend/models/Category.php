@@ -67,4 +67,14 @@ class Category extends \yii\db\ActiveRecord
     {
         return $this->hasMany(UserCategory::className(), ['categories_id' => 'id']);
     }
+
+    public static function getNameCategories()
+    {
+        $categories = Category::find()->all();
+        $names = [];
+        foreach ($categories as $category) {
+            $names[$category->id] = $category->name;
+        }
+        return $names;
+    }
 }

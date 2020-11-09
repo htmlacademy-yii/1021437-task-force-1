@@ -115,6 +115,11 @@ class User extends \yii\db\ActiveRecord
         return $this->hasMany(Feedback::class, ['executor_id' => 'id']);
     }
 
+    public function getTotalFeedback()
+    {
+        return count($this->feedbacks0);
+    }
+
     /**
      * Gets query for [[Messages]].
      *
@@ -198,6 +203,11 @@ class User extends \yii\db\ActiveRecord
     public function getTotalTasks()
     {
         return count($this->tasks0);
+    }
+
+    public function getTotalTasksForAuthor()
+    {
+        return count($this->tasks);
     }
 
     public function getTotalFeedbacks()
