@@ -69,4 +69,14 @@ class City extends \yii\db\ActiveRecord
     {
         return $this->hasMany(User::className(), ['city_id' => 'id']);
     }
+
+    public static function getListCities()
+    {
+        $cities = City::find()->all();
+        $names = [];
+        foreach ($cities as $city) {
+            $names[$city->id] = $city->city;
+        }
+        return $names;
+    }
 }
