@@ -103,7 +103,7 @@ AppAsset::register($this);
                              alt="Аватар пользователя">
                     </a>
                     <span class="header__account-name">
-                     Василий
+                     <?= $this->context->getProfile(); ?>
                  </span>
                 </div>
                 <div class="account__pop-up">
@@ -115,7 +115,7 @@ AppAsset::register($this);
                             <a href="#">Настройки</a>
                         </li>
                         <li>
-                            <a href="#">Выход</a>
+                            <a href="<?= Url::to(['base/logout']); ?>">Выход</a>
                         </li>
                     </ul>
                 </div>
