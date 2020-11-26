@@ -5,14 +5,16 @@ namespace frontend\controllers;
 use frontend\models\Category;
 use frontend\models\SearchUsersForm;
 use frontend\models\User;
+use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-class UsersController extends Controller
+class UsersController extends SecuredController
 {
+
     public function actionIndex($sort = '')
     {
-
         $model = new SearchUsersForm();
         $categories = Category::getNameCategories();
         $model->load(\Yii::$app->request->get());
@@ -29,5 +31,7 @@ class UsersController extends Controller
         }
         return $this->render('view', compact('user'));
     }
+
+
 
 }

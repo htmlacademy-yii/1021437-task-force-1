@@ -7,10 +7,26 @@ use frontend\models\City;
 use frontend\models\RegistrationForm;
 use frontend\models\User;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class RegistrationController extends Controller
 {
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['?']
+                    ]
+                ]
+            ]
+        ];
+    }
 
     public function actionIndex()
     {

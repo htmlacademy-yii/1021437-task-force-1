@@ -1,7 +1,6 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveField;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Регистрация аккаунта';
@@ -20,25 +19,33 @@ $this->title = 'Регистрация аккаунта';
                 'options' => [
                     'tag' => false,
                 ],
+                'errorOptions' => ['style' => 'color: #FF116E']
             ]
         ]) ?>
             <?= $form->field(
                 $model,
                 'email',
-                ['errorOptions' => ['tag' => 'span']]
-            )->textarea(
                 [
-                    'autofocus' => true, 'class' => 'input textarea', 'rows' => '1', 'placeholder' => 'kumarm@mail.ru'
+                    'labelOptions' => ['class' => isset($errors['password']) ? 'input-danger' : ''],
+                    'errorOptions' => ['tag' => 'span']
+                ]
+            )->input('text',
+                [
+                    'autofocus' => true,
+                    'class' => 'input textarea',
+                    'placeholder' => 'kumarm@mail.ru'
                 ]
             ); ?>
             <?= $form->field(
                 $model,
                 'name',
-                ['errorOptions' => ['tag' => 'span']]
-            )->textarea(
+                [
+                    'labelOptions' => ['class' => isset($errors['password']) ? 'input-danger' : ''],
+                    'errorOptions' => ['tag' => 'span']
+                ]
+            )->input('text',
                 [
                     'class' => 'input textarea',
-                    'rows' => '1',
                     'placeholder' => 'Мамедов Кумар'
                 ]
             ); ?>
@@ -55,7 +62,10 @@ $this->title = 'Регистрация аккаунта';
             <?= $form->field(
                 $model,
                 'password',
-                ['labelOptions' => ['class' => isset($errors['password']) ? 'input-danger' : '']]
+                [
+                    'labelOptions' => ['class' => isset($errors['password']) ? 'input-danger' : ''],
+                    'errorOptions' => ['tag' => 'span']
+                ]
             )->passwordInput(['class' => 'input textarea']); ?>
             <?= Html::submitButton('Создать аккаунт', ['class' => 'button button__registration']); ?>
         <?php ActiveForm::end(); ?>
