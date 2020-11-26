@@ -17,16 +17,13 @@ return [
             'password' => 'kMfOdXaaOKUWVCvc',
             'charset' => 'utf8',
         ],
-//        'urlManager' => [
-//            'enablePrettyUrl' => true,
-//            'showScriptName' => false,
-//            'enableStrictParsing' => false,
-//            'rules' => [
-//                'tasks' => 'tasks/index',
-//                'users' => 'users/index',
-//                'landing' => 'landing/index',
-//                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-//            ],
-//        ],
+        /*
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+            ],
+        ],
+        */
     ],
 ];

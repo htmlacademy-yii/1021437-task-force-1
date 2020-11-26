@@ -22,7 +22,6 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
 <div class="table-layout">
     <header class="page-header">
         <div class="main-container page-header__container">
@@ -103,7 +102,7 @@ AppAsset::register($this);
                              alt="Аватар пользователя">
                     </a>
                     <span class="header__account-name">
-                     <?= $this->context->getProfile(); ?>
+                    <?= Yii::$app->user->identity->name; ?>
                  </span>
                 </div>
                 <div class="account__pop-up">
@@ -115,7 +114,7 @@ AppAsset::register($this);
                             <a href="#">Настройки</a>
                         </li>
                         <li>
-                            <a href="<?= Url::to(['base/logout']); ?>">Выход</a>
+                            <a href="<?= Url::to(['landing/logout']); ?>">Выход</a>
                         </li>
                     </ul>
                 </div>

@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use frontend\models\LoginForm;
+use frontend\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
@@ -20,7 +21,6 @@ class LandingController extends Controller
 
         $title = 'Task-Force: Главная страница';
         $model = new LoginForm();
-        $errors = [];
 
         if (Yii::$app->request->getIsPost()) {
             $model->load(Yii::$app->request->post());
@@ -33,8 +33,13 @@ class LandingController extends Controller
                 Yii::$app->user->login($user);
                 return $this->redirect(['tasks/']);
             }
-            $errors = $model->getErrors();
         }
-        return $this->render('index', compact('model', 'errors', 'title'));
+        return $this->render('index', compact('model', 'title'));
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 }
