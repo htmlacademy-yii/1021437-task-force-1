@@ -164,12 +164,6 @@ use yii\widgets\ActiveForm;
 <section class="modal enter-form form-modal" id="enter-form">
     <h2>Вход на сайт</h2>
     <?php $form = ActiveForm::begin([
-//        'method' => 'post',
-//        'action' => '/',
-//        'enableAjaxValidation' => true,
-//        'validateOnSubmit' => false,
-//        'enableClientValidation'=> false,
-//        'id' => 'login-form',
         'enableAjaxValidation' => true,
     ]); ?>
     <?= $form->field(

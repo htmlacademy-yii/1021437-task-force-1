@@ -17,13 +17,5 @@ return [
             'password' => 'kMfOdXaaOKUWVCvc',
             'charset' => 'utf8',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
     ],
 ];
