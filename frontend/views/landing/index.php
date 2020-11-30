@@ -166,6 +166,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'enableAjaxValidation' => true,
     ]); ?>
+    <?= $form->errorSummary($model, ['class' => 'errors-field']); ?>
     <?= $form->field(
         $model,
         'email',
@@ -190,6 +191,6 @@ use yii\widgets\ActiveForm;
     ])->error(['style' => 'color: #FF116E;margin-bottom:30px;']); ?>
     <?= Html::submitButton('Войти', ['class' => 'button']); ?>
     <?php ActiveForm::end();  ?>
-    <button class="form-modal-close" type="button">Закрыть</button>
+    <button class="form-modal-close" id="close-modal" type="button">Закрыть</button>
 </section>
 

@@ -3,14 +3,34 @@
 namespace frontend\controllers;
 
 use frontend\models\Category;
+use frontend\models\CreateTaskForm;
 use frontend\models\SearchTaskForm;
 use frontend\models\Task;
+use frontend\models\User;
 use Yii;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
+
+    public function behaviors()
+    {
+        $rules = parent::behaviors();
+        $rule = [
+            'allow' => false,
+            'actions' => ['create'],
+            'matchCallback' => function($rule, $action) {
+                $id = Yii::$app->user->id;
+                $userRole = User::findOne($id);
+
+                return $userRole->role !== 'client';
+            }
+        ];
+
+        array_unshift($rules['access']['rules'], $rule);
+        return $rules;
+    }
+
     public function actionIndex()
     {
         $model = new SearchTaskForm();
@@ -31,5 +51,24 @@ class TasksController extends SecuredController
         }
 
         return $this->render('view', compact('idTask', 'task'));
+    }
+
+    public function actionCreate()
+    {
+
+        $model = new CreateTaskForm();
+        $categories = Category::getNameCategories();
+        $errors = [];
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            if ($id = $model->saveTask()) {
+                $this->redirect(['/tasks/view', 'id' => $id]);
+            }
+
+            $errors= $model->getErrors();
+        }
+
+        return $this->render('create', compact('model', 'categories', 'errors'));
     }
 }

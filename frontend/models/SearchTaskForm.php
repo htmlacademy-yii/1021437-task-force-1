@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\models;
+
 use yii\db\ActiveRecord;
 use yii\db\Expression;
 
