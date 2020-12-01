@@ -57,7 +57,9 @@ $this->title = 'Создайте новую задачу';
         <span>Загрузите файлы, которые помогут исполнителю лучше выполнить или оценить работу</span>
         <div class="create__file">
             <span>Добавить новый файл</span>
+            <?php echo Yii::$app->session->getFlash('errorUploadFile'); ?>
         </div>
+        <div class="create__file_error" style="color: #FF116E;display:none;">Прозошла ошибка при загрузке изображения</div>
         <div class="create__price-time">
             <div class="create__price-time--wrapper">
                 <?= $form->field(
@@ -117,5 +119,17 @@ $this->title = 'Создайте новую задачу';
         headers: {
             'x-csrf-token': document.querySelectorAll('meta[name=csrf-token]')[0].getAttributeNode('content').value,
         },
+        init: function() {
+            this.on("error", function(file, response) {
+                document.querySelector('.create__file_error').style.display = 'block';
+                document.querySelector('.dz-preview.dz-processing.dz-image-preview.dz-error .dz-details .dz-filename span').style.color = 'red';
+                document.querySelector('.dz-error-message').style.display = 'none';
+            });
+            this.on("success", function(file, response) {
+                document.querySelector('.create__file_error').style.display = 'none';
+            });
+
+
+        }
     });
 </script>

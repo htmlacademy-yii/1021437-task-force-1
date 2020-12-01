@@ -2,7 +2,9 @@
 
 namespace frontend\models;
 
+use frontend\controllers\AttachmentController;
 use Yii;
+use yii\base\Exception;
 use yii\base\Model;
 use yii\web\UploadedFile;
 
@@ -48,33 +50,9 @@ class CreateTaskForm extends Model
         }
     }
 
-    private function saveImage()
-    {
-        if ($file = UploadedFile::getInstanceByName('Attach')) {
-            $fileName = uniqid() . $file->name;
-            $filePath = 'uploads/' . $fileName;
-            $file->saveAs($filePath, false);
-            $session = Yii::$app->session['imageFile'];
-            $session[] = [$fileName, $filePath];
-            Yii::$app->session['imageFile'] = $session;
-        }
-    }
-
-    private function uploadFile($files, $idTask)
-    {
-
-        foreach ($files as $file) {
-            $attachments = new TaskAttachment();
-            $attachments->task_id = $idTask;
-            $attachments->file_name = $file[0];
-            $attachments->file_link = $file[1];
-            $attachments->save();
-        }
-    }
-
     public function saveTask()
     {
-        $this->saveImage();
+        AttachmentController::saveImage();
 
         if ($this->validate()) {
             $task = new Task();
@@ -87,8 +65,7 @@ class CreateTaskForm extends Model
             $task->save();
 
             if (Yii::$app->session['imageFile']) {
-                $this->uploadFile(Yii::$app->session['imageFile'], $task->id);
-
+                AttachmentController::attachFiles(Yii::$app->session['imageFile'], $task->id);
                 $session = Yii::$app->session;
                 unset($session['imageFile']);
             }

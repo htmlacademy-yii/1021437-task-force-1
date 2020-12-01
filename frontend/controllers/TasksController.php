@@ -23,11 +23,11 @@ class TasksController extends SecuredController
                 $id = Yii::$app->user->id;
                 $userRole = User::findOne($id);
 
-                return $userRole->role !== 'client';
+                return $userRole->role === User::EXECUTOR;
             }
         ];
 
-        array_unshift($rules['access']['rules'], $rule);
+        array_push($rules['access']['rules'], $rule);
         return $rules;
     }
 
