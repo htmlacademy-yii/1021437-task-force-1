@@ -34,7 +34,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
 
-    const EXECUTOR = 'executor';
+    const CLIENT = 'client';
 
     /**
      * {@inheritdoc}

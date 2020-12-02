@@ -8,6 +8,7 @@ use frontend\models\SearchTaskForm;
 use frontend\models\Task;
 use frontend\models\User;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
@@ -15,19 +16,30 @@ class TasksController extends SecuredController
 
     public function behaviors()
     {
-        $rules = parent::behaviors();
-        $rule = [
-            'allow' => false,
-            'actions' => ['create'],
-            'matchCallback' => function($rule, $action) {
-                $id = Yii::$app->user->id;
-                $userRole = User::findOne($id);
 
-                return $userRole->role === User::EXECUTOR;
-            }
+        $rules = [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+//                    [
+//                        'allow' => true,
+//                        'roles' => ['@']
+//                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'],
+                        'roles' => ['@'],
+                        'matchCallback' => function($rule, $action) {
+                            $id = Yii::$app->user->id;
+                            $userRole = User::findOne($id);
+
+                            return $userRole->role === User::CLIENT;
+                        }
+                    ]
+                ]
+            ]
         ];
 
-        array_push($rules['access']['rules'], $rule);
         return $rules;
     }
 
@@ -60,9 +72,11 @@ class TasksController extends SecuredController
         $categories = Category::getNameCategories();
         $errors = [];
 
+        $service = new ProcessingFormCreateTask();
+
         if (Yii::$app->request->isPost) {
             $model->load(Yii::$app->request->post());
-            if ($id = $model->saveTask()) {
+            if ($id = $service->saveTask($model)) {
                 $this->redirect(['/tasks/view', 'id' => $id]);
             }
 

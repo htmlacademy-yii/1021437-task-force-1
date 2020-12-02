@@ -2,7 +2,7 @@
 
 namespace frontend\models;
 
-use frontend\controllers\AttachmentController;
+use frontend\controllers\ProcessingFormCreateTask;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
@@ -50,26 +50,4 @@ class CreateTaskForm extends Model
         }
     }
 
-    public function saveTask()
-    {
-        AttachmentController::saveImage();
-
-        if ($this->validate()) {
-            $task = new Task();
-            $task->title = $this->title;
-            $task->description = $this->description;
-            $task->budget = $this->budget;
-            $task->author_id = Yii::$app->user->id;
-            $task->ends_at = $this->ends_at;
-            $task->category_id = $this->category;
-            $task->save();
-
-            if (Yii::$app->session['imageFile']) {
-                AttachmentController::attachFiles(Yii::$app->session['imageFile'], $task->id);
-                $session = Yii::$app->session;
-                unset($session['imageFile']);
-            }
-        }
-        return $task->id ?? null;
-    }
 }
