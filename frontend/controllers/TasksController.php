@@ -8,40 +8,11 @@ use frontend\models\SearchTaskForm;
 use frontend\models\Task;
 use frontend\models\User;
 use Yii;
-use yii\filters\AccessControl;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
-
-    public function behaviors()
-    {
-
-        $rules = [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-//                    [
-//                        'allow' => true,
-//                        'roles' => ['@']
-//                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['create'],
-                        'roles' => ['@'],
-                        'matchCallback' => function($rule, $action) {
-                            $id = Yii::$app->user->id;
-                            $userRole = User::findOne($id);
-
-                            return $userRole->role === User::CLIENT;
-                        }
-                    ]
-                ]
-            ]
-        ];
-
-        return $rules;
-    }
 
     public function actionIndex()
     {
@@ -67,6 +38,10 @@ class TasksController extends SecuredController
 
     public function actionCreate()
     {
+
+        if (Yii::$app->user->getIdentity()->role !== User::CLIENT) {
+            throw new ForbiddenHttpException('Страница доступна только для заказчиков');
+        }
 
         $model = new CreateTaskForm();
         $categories = Category::getNameCategories();
