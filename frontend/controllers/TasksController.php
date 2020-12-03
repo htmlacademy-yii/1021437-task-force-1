@@ -3,14 +3,17 @@
 namespace frontend\controllers;
 
 use frontend\models\Category;
+use frontend\models\CreateTaskForm;
 use frontend\models\SearchTaskForm;
 use frontend\models\Task;
+use frontend\models\User;
 use Yii;
-use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 class TasksController extends SecuredController
 {
+
     public function actionIndex()
     {
         $model = new SearchTaskForm();
@@ -31,5 +34,30 @@ class TasksController extends SecuredController
         }
 
         return $this->render('view', compact('idTask', 'task'));
+    }
+
+    public function actionCreate()
+    {
+
+        if (Yii::$app->user->getIdentity()->role !== User::CLIENT) {
+            throw new ForbiddenHttpException('Страница доступна только для заказчиков');
+        }
+
+        $model = new CreateTaskForm();
+        $categories = Category::getNameCategories();
+        $errors = [];
+
+        $service = new ProcessingFormCreateTask();
+
+        if (Yii::$app->request->isPost) {
+            $model->load(Yii::$app->request->post());
+            if ($id = $service->saveTask($model)) {
+                $this->redirect(['/tasks/view', 'id' => $id]);
+            }
+
+            $errors= $model->getErrors();
+        }
+
+        return $this->render('create', compact('model', 'categories', 'errors'));
     }
 }

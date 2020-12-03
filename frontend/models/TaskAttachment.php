@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property int $task_id id задачи
+ * @property string $file_name
  * @property string $file_link ссылка на файл в задаче
  *
  * @property Task $task
@@ -29,8 +30,9 @@ class TaskAttachment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'file_link'], 'required'],
+            [['task_id', 'file_name', 'file_link'], 'required'],
             [['task_id'], 'integer'],
+            [['file_name'], 'string', 'max' => 255],
             [['file_link'], 'string', 'max' => 2048],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
         ];
@@ -44,6 +46,7 @@ class TaskAttachment extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'task_id' => 'Task ID',
+            'file_name' => 'File Name',
             'file_link' => 'File Link',
         ];
     }
