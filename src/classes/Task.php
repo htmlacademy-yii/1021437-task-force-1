@@ -27,7 +27,7 @@ class Task
 
     const MAP_STATUSES_NAME = [
         self::STATUS_NEW => 'новое',
-        self::STATUS_CANCEL => 'отменено',
+        self::STATUS_CANCEL => 'отменена',
         self::STATUS_IN_WORK => 'в работе',
         self::STATUS_SUCCESS => 'выполнено',
         self::STATUS_FAILED => 'провалено',

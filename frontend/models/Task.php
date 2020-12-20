@@ -116,6 +116,13 @@ class Task extends ActiveRecord
         return $this->hasMany(Response::class, ['task_id' => 'id']);
     }
 
+    public function getResponseUser($taskId, $executorId)
+    {
+        $task = Response::find()->where(['task_id' => $taskId, 'executor_id' => $executorId])->select(['executor_id', 'text_responses'])->asArray()->all();
+        return $task;
+    }
+
+
     public function getTotalResponses()
     {
         return count($this->responses);

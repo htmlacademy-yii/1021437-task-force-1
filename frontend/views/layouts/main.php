@@ -171,7 +171,7 @@ AppAsset::register($this);
         </div>
     </footer>
 </div>
-
+<div class="overlay"></div>
 <?php $this->endBody() ?>
 </body>
 </html>

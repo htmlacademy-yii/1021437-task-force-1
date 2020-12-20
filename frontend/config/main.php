@@ -12,6 +12,7 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'language' => 'ru-Ru',
+    'sourceLanguage' => 'ru-RU',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
@@ -48,6 +49,16 @@ return [
                 'users' => 'users/index',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 'logout' => 'base/logout'
+            ],
+        ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
             ],
         ],
     ],
