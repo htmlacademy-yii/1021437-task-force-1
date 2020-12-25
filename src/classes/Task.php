@@ -101,11 +101,15 @@ class Task
         if ($this->currentUser !== $this->clientId && $this->executorId !== $this->currentUser) {
             throw new IncorrectRoleException('Нет такой роли у пользователя');
         }
+        if (!self::MAP_STATUSES_AND_ACTIONS[$this->status]) {
+            throw new IncorrectRoleException('Задача имеет конечный статус');
+        }
         foreach (self::MAP_STATUSES_AND_ACTIONS[$this->status] as $action) {
             if ($this->actions[$action]->checkRule($this->clientId, $this->executorId, $this->currentUser)) {
                 return $this->actions[$action];
             }
         }
+
         return null;
     }
 }

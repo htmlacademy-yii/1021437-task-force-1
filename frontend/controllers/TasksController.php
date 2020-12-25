@@ -12,6 +12,7 @@ use frontend\models\SearchTaskForm;
 use frontend\models\Task;
 use frontend\models\User;
 use Exception;
+use Task\classes\exceptions\IncorrectRoleException;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
@@ -41,16 +42,14 @@ class TasksController extends SecuredController
         $modelResponse = new ResponseTask();
         $modelComplete = new CompleteTaskForm();
 
-        $response = $task->getResponseUser($task->id, Yii::$app->user->id);
-
-        $executorId = ($task->status === 'new') ? Yii::$app->user->id : $task->executor_id;
+        $response = $task->getResponseUser(Yii::$app->user->id);
+        $executorId = ($task->status === \Task\classes\Task::STATUS_NEW) ? Yii::$app->user->id : $task->executor_id;
         $currentTask = new \Task\classes\Task($task->author_id, $executorId, Yii::$app->user->id, $task->status);
-
-        $status = ($task->status === 'canceled') ? 'отменена' : 'провелена';
+        $status = ($task->status === \Task\classes\Task::STATUS_CANCEL) ? 'отменена' : 'провалена';
 
         try {
             $action = $currentTask->getActionsFromStatus();
-        } catch(Exception $e) {
+        } catch(IncorrectRoleException $e) {
             $message = ($task->status === $currentTask::STATUS_CANCEL || $task->status === $currentTask::STATUS_FAILED) ?
                 'Задача - '. $status .'. Доступ закрыт.' :
                 'Страница доступна только для исполнителей и заказчиков в режиме - "В работе"';
@@ -92,83 +91,54 @@ class TasksController extends SecuredController
     public function actionRespond()
     {
         $model = new ResponseTask();
-        if (Yii::$app->request->isPost) {
-            $model->load(Yii::$app->request->post());
-            if ($model->validate()) {
-                $model->saveResponse($model);
-                return $this->redirect(['tasks/view/', 'id' => $model->taskId]);
-            }
+        if (!Yii::$app->request->isPost) {
+            throw new NotFoundHttpException('Указана неверная страница');
         }
-        throw new NotFoundHttpException('Указана неверная страница');
+        $action = new ActionsWithTask();
+        $action->sendResponse($model);
+        return $this->redirect(['tasks/view/', 'id' => $model->taskId]);
     }
 
     public function actionComplete($id)
     {
         $model = new CompleteTaskForm();
-        $userId = Yii::$app->user->id;
-        $errors = [];
-        if (Yii::$app->request->isPost) {
-            $model->load(Yii::$app->request->post());
-            $status = ($model->status === 'yes') ? 'success' : 'failed';
-            if ($model->validate()) {
-                $task = Task::find()->where(['id' => $id, 'author_id' => $userId])->one();
-                $task->status = $status;
-                $task->ends_at = date("Y-m-d H:i:s");
-                $task->save();
-
-                $model->saveFeedBack($model, $task, $userId, $id, $status);
-                $model->updateRating($task->executor_id);
-
-                return $this->redirect(['/tasks']);
-            }
-            $errors = $model->getErrors();
+        if (!Yii::$app->request->isPost) {
+            throw new NotFoundHttpException('Произошла ошибка. Повторите');
         }
-        return $errors;
+        $model->load(Yii::$app->request->post());
+        if ($model->validate()) {
+            $action = new ActionsWithTask();
+            $action->sendComplete($model, $id, Yii::$app->user->id);
+            return $this->redirect(['/tasks']);
+        }
+        return $model->getErrors();
     }
 
     public function actionFailedTask($id)
     {
-        $task = Task::find()->where(['id' => $id])->one();
-        $task->status = 'failed';
-        $task->ends_at = date("Y-m-d H:i:s");
-        $task->save();
-
-        $user = Profile::find()->where(['user_id' => Yii::$app->user->id])->one();
-        $user->counter_of_failed_tasks = intval($user->counter_of_failed_tasks) + 1;
-        $user->save();
+        $action = new ActionsWithTask();
+        $action->sendFailedTask($id);
         return $this->redirect(['/tasks']);
     }
 
     public function actionCancel($id)
     {
-        $task = Task::find()->where(['id' => $id])->one();
-        $task->status = 'canceled';
-        $task->ends_at = date("Y-m-d H:i:s");
-        if ($task->save()) {
-            return $this->redirect(['tasks/view/', 'id' => $id]);
-        }
+        $action = new ActionsWithTask();
+        $action->sendCancel($id);
+        return $this->redirect(['tasks/view/', 'id' => $id]);
     }
 
     public function actionRejectResponse($userId, $taskId)
     {
-        $response = Response::find()->where(['task_id' => $taskId, 'executor_id' => $userId])->one();
-        $response->status_response = 'disable';
-        $response->save();
+        $action = new ActionsWithTask();
+        $action->sendRejectResponse($userId, $taskId);
         return $this->redirect(['tasks/view/', 'id' => $taskId]);
     }
 
     public function actionAcceptResponse($userId, $taskId)
     {
-        $response = Response::find()->where(['task_id' => $taskId, 'executor_id' => $userId])->one();
-        $response->status_response = 'accept';
-        $response->save();
-
-        $task = Task::find()->where(['id' => $taskId])->one();
-        $task->status = 'in_work';
-        $task->executor_id = $userId;
-        $task->start_at = date("Y-m-d H:i:s");
-
-        $task->save();
+        $action = new ActionsWithTask();
+        $action->sendAcceptResponse($userId, $taskId);
         return $this->redirect(['tasks/view/', 'id' => $taskId]);
     }
 }

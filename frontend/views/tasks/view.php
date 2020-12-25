@@ -6,6 +6,7 @@ use Task\classes\utils\ViewRatingStars;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Task №' . $idTask . ' | Title: ' . $task->title;
+
 ?>
 <section class="content-view">
     <div class="content-view__card">
@@ -68,38 +69,40 @@ $this->title = 'Task №' . $idTask . ' | Title: ' . $task->title;
             <?php endif; ?>
         </div>
     </div>
-    <?php if(Yii::$app->user->id === $task->author_id): ?>
+    <?php if(Yii::$app->user->id === $task->author_id || !empty($response)): ?>
         <div class="content-view__feedback">
             <h2>Отклики <span>(<?= $task->getTotalResponses(); ?>)</span></h2>
             <div class="content-view__feedback-wrapper">
                 <?php foreach($task->responses as $user): ?>
-                    <div class="content-view__feedback-card">
-                        <div class="feedback-card__top">
-                            <a href="<?= Url::to(['users/view', 'id' => $user->executor->id]); ?>">
-                                <img src="/img/man-glasses.jpg" width="55" height="55">
-                            </a>
-                            <div class="feedback-card__top--name">
-                                <p><a href="<?= Url::to(['users/view', 'id' => $user->executor->id]); ?>" class="link-regular"><?= Html::encode($user->executor->name); ?></a></p>
-                                <?= ViewRatingStars::getRating($user->executor->profile->rating); ?>
-                                <b><?= $user->executor->profile->rating; ?></b>
+                    <?php if (Yii::$app->user->id === $user->executor->id || Yii::$app->user->id === $task->author_id ): ?>
+                        <div class="content-view__feedback-card">
+                            <div class="feedback-card__top">
+                                <a href="<?= Url::to(['users/view', 'id' => $user->executor->id]); ?>">
+                                    <img src="/img/man-glasses.jpg" width="55" height="55">
+                                </a>
+                                <div class="feedback-card__top--name">
+                                    <p><a href="<?= Url::to(['users/view', 'id' => $user->executor->id]); ?>" class="link-regular"><?= Html::encode($user->executor->name); ?></a></p>
+                                    <?= ViewRatingStars::getRating($user->executor->profile->rating); ?>
+                                    <b><?= $user->executor->profile->rating; ?></b>
+                                </div>
+                                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($user->created_at); ?></span>
                             </div>
-                            <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($user->created_at); ?></span>
-                        </div>
-                        <div class="feedback-card__content">
-                            <p>
-                                <?= Html::encode($user->text_responses); ?>
-                            </p>
-                            <span><?= $user->budget; ?> ₽</span>
-                        </div>
-                        <?php if ($user->status_response === 'new' && $task->status === 'new'): ?>
-                            <div class="feedback-card__actions">
-                                <a href="<?= Url::to(['tasks/accept-response', 'userId' => $user->executor->id, 'taskId' => $task->id]); ?>" class="button__small-color request-button button"
-                                   type="button">Подтвердить</a>
-                                <a href="<?= Url::to(['tasks/reject-response', 'userId' => $user->executor->id, 'taskId' => $task->id]); ?>" class="button__small-color refusal-button button"
-                                   type="button">Отказать</a>
+                            <div class="feedback-card__content">
+                                <p>
+                                    <?= Html::encode($user->text_responses); ?>
+                                </p>
+                                <span><?= $user->budget; ?> ₽</span>
                             </div>
-                        <?php endif; ?>
-                    </div>
+                            <?php if ($user->status_response === 'new' && $task->status === 'new'): ?>
+                                <div class="feedback-card__actions">
+                                    <a href="<?= Url::to(['tasks/accept-response', 'userId' => $user->executor->id, 'taskId' => $task->id]); ?>" class="button__small-color request-button button"
+                                       type="button">Подтвердить</a>
+                                    <a href="<?= Url::to(['tasks/reject-response', 'userId' => $user->executor->id, 'taskId' => $task->id]); ?>" class="button__small-color refusal-button button"
+                                       type="button">Отказать</a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </div>
         </div>
