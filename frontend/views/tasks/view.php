@@ -93,7 +93,7 @@ $this->title = 'Task №' . $idTask . ' | Title: ' . $task->title;
                                 </p>
                                 <span><?= $user->budget; ?> ₽</span>
                             </div>
-                            <?php if ($user->status_response === 'new' && $task->status === 'new'): ?>
+                            <?php if ($user->status_response === 'new' && $task->status === 'new' && Yii::$app->user->id === $task->author_id): ?>
                                 <div class="feedback-card__actions">
                                     <a href="<?= Url::to(['tasks/accept-response', 'userId' => $user->executor->id, 'taskId' => $task->id]); ?>" class="button__small-color request-button button"
                                        type="button">Подтвердить</a>

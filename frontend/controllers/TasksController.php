@@ -5,17 +5,15 @@ namespace frontend\controllers;
 use frontend\models\Category;
 use frontend\models\CompleteTaskForm;
 use frontend\models\CreateTaskForm;
-use frontend\models\Profile;
-use frontend\models\Response;
 use frontend\models\ResponseTask;
 use frontend\models\SearchTaskForm;
 use frontend\models\Task;
 use frontend\models\User;
-use Exception;
 use Task\classes\exceptions\IncorrectRoleException;
 use Yii;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use Task\classes\Task as TaskProperties;
 
 class TasksController extends SecuredController
 {
@@ -39,13 +37,17 @@ class TasksController extends SecuredController
             throw new NotFoundHttpException("Задача с таким ID - $id не найдена");
         }
 
+        $executorId = ($task->status === TaskProperties::STATUS_NEW) ? Yii::$app->user->id : $task->executor_id;
+
+        if (!$executorId) {
+            throw new ForbiddenHttpException('Задача - '. TaskProperties::MAP_STATUSES_NAME[$task->status]  .'. Доступ закрыт.');
+        }
+
         $modelResponse = new ResponseTask();
         $modelComplete = new CompleteTaskForm();
 
-        $response = $task->getResponseUser(Yii::$app->user->id);
-        $executorId = ($task->status === \Task\classes\Task::STATUS_NEW) ? Yii::$app->user->id : $task->executor_id;
-        $currentTask = new \Task\classes\Task($task->author_id, $executorId, Yii::$app->user->id, $task->status);
-        $status = ($task->status === \Task\classes\Task::STATUS_CANCEL) ? 'отменена' : 'провалена';
+        $currentTask = new TaskProperties($task->author_id, $executorId, Yii::$app->user->id, $task->status);
+        $status = ($task->status === TaskProperties::STATUS_CANCEL) ? 'отменена' : 'провалена';
 
         try {
             $action = $currentTask->getActionsFromStatus();
@@ -55,6 +57,8 @@ class TasksController extends SecuredController
                 'Страница доступна только для исполнителей и заказчиков в режиме - "В работе"';
             throw new ForbiddenHttpException($message);
         }
+
+        $response = $task->getResponseUser(Yii::$app->user->id);
 
         return $this->render(
             'view',
@@ -94,6 +98,7 @@ class TasksController extends SecuredController
         if (!Yii::$app->request->isPost) {
             throw new NotFoundHttpException('Указана неверная страница');
         }
+        $model->load(\Yii::$app->request->post());
         $action = new ActionsWithTask();
         $action->sendResponse($model);
         return $this->redirect(['tasks/view/', 'id' => $model->taskId]);
@@ -106,9 +111,12 @@ class TasksController extends SecuredController
             throw new NotFoundHttpException('Произошла ошибка. Повторите');
         }
         $model->load(Yii::$app->request->post());
-        if ($model->validate()) {
-            $action = new ActionsWithTask();
-            $action->sendComplete($model, $id, Yii::$app->user->id);
+        $task = Task::find()->where(['id' => $id, 'author_id' => Yii::$app->user->id])->one();
+        if (!$task) {
+            throw new NotFoundHttpException('Нет такой задачи');
+        }
+        $action = new ActionsWithTask();
+        if ($action->sendComplete($model, $task, Yii::$app->user->id)) {
             return $this->redirect(['/tasks']);
         }
         return $model->getErrors();
@@ -117,14 +125,22 @@ class TasksController extends SecuredController
     public function actionFailedTask($id)
     {
         $action = new ActionsWithTask();
-        $action->sendFailedTask($id);
+        $task = Task::find()->where(['id' => $id])->one();
+        if (!$task) {
+            throw new NotFoundHttpException('Нет такой задачи');
+        }
+        $action->sendFailedTask($task);
         return $this->redirect(['/tasks']);
     }
 
     public function actionCancel($id)
     {
+        $task = Task::find()->where(['id' => $id])->one();
+        if (!$task) {
+            throw new NotFoundHttpException('Нет такой задачи');
+        }
         $action = new ActionsWithTask();
-        $action->sendCancel($id);
+        $action->sendCancel($task);
         return $this->redirect(['tasks/view/', 'id' => $id]);
     }
 
@@ -138,7 +154,11 @@ class TasksController extends SecuredController
     public function actionAcceptResponse($userId, $taskId)
     {
         $action = new ActionsWithTask();
-        $action->sendAcceptResponse($userId, $taskId);
-        return $this->redirect(['tasks/view/', 'id' => $taskId]);
+        $task = Task::find()->where(['id' => $taskId])->one();
+        if (!$task) {
+            throw new NotFoundHttpException('Нет такой задачи');
+        }
+        $action->sendAcceptResponse($userId, $task);
+        return $this->redirect(['tasks/view/', 'id' =>$taskId]);
     }
 }

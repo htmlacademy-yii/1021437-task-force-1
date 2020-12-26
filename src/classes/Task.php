@@ -47,6 +47,9 @@ class Task
         self::ACTION_RESPOND => self::STATUS_IN_WORK,
     ];
 
+    const RESPONSE_DISABLE = 'disable';
+    const RESPONSE_ACCEPT = 'accept';
+
     private $executorId;
     private $clientId;
     private $currentUser;

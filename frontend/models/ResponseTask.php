@@ -28,15 +28,4 @@ class ResponseTask extends Model
             'text' => 'Комментарий'
         ];
     }
-
-    public function saveResponse($model)
-    {
-        $response = new Response();
-        $response->task_id = $model->taskId;
-        $response->executor_id = \Yii::$app->user->id;
-        $response->budget = $model->budget;
-        $response->text_responses = $model->text;
-        $response->save();
-    }
-
 }

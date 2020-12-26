@@ -37,6 +37,7 @@ class Response extends \yii\db\ActiveRecord
             [['task_id', 'executor_id', 'budget'], 'integer'],
             [['text_responses'], 'string'],
             [['created_at'], 'safe'],
+            ['status_response', 'in', 'range' => ['accept','disable','new']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
         ];
