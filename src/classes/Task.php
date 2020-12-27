@@ -27,7 +27,7 @@ class Task
 
     const MAP_STATUSES_NAME = [
         self::STATUS_NEW => 'новое',
-        self::STATUS_CANCEL => 'отменено',
+        self::STATUS_CANCEL => 'отменена',
         self::STATUS_IN_WORK => 'в работе',
         self::STATUS_SUCCESS => 'выполнено',
         self::STATUS_FAILED => 'провалено',
@@ -46,6 +46,9 @@ class Task
         self::ACTION_REFUSE => self::STATUS_FAILED,
         self::ACTION_RESPOND => self::STATUS_IN_WORK,
     ];
+
+    const RESPONSE_DISABLE = 'disable';
+    const RESPONSE_ACCEPT = 'accept';
 
     private $executorId;
     private $clientId;
@@ -101,11 +104,15 @@ class Task
         if ($this->currentUser !== $this->clientId && $this->executorId !== $this->currentUser) {
             throw new IncorrectRoleException('Нет такой роли у пользователя');
         }
+        if (!self::MAP_STATUSES_AND_ACTIONS[$this->status]) {
+            throw new IncorrectRoleException('Задача имеет конечный статус');
+        }
         foreach (self::MAP_STATUSES_AND_ACTIONS[$this->status] as $action) {
             if ($this->actions[$action]->checkRule($this->clientId, $this->executorId, $this->currentUser)) {
                 return $this->actions[$action];
             }
         }
+
         return null;
     }
 }

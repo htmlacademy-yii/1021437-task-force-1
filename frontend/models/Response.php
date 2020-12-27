@@ -33,10 +33,11 @@ class Response extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id', 'executor_id', 'text_responses'], 'required'],
+            [['task_id', 'executor_id'], 'required'],
             [['task_id', 'executor_id', 'budget'], 'integer'],
             [['text_responses'], 'string'],
             [['created_at'], 'safe'],
+            ['status_response', 'in', 'range' => ['accept','disable','new']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Task::className(), 'targetAttribute' => ['task_id' => 'id']],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['executor_id' => 'id']],
         ];
@@ -76,4 +77,5 @@ class Response extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'executor_id']);
     }
+
 }
