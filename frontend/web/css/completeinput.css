@@ -1,0 +1,25 @@
+#cities_list {
+  border: 1px solid #e4e9f2;
+  position: absolute;
+  top: 1007px;
+  background-color: #f7f9fc;
+}
+#task-form #autoComplete {
+  background-image: url(../img/navigation.png);
+  background-position: 480px 10px;
+  background-repeat: no-repeat;
+  margin-bottom: 10px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-right: 16px;
+  padding-left: 16px;
+  color: #8F9BB2;
+  border: 1px solid #e4e9f2;
+  border-radius: 4px;
+  background-color: #f7f9fc;
+  cursor: pointer;
+  width: inherit;
+}
+#task-form #autoComplete::placeholder {
+  color: #757575;
+}

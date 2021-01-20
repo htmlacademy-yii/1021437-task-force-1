@@ -16,6 +16,9 @@ class CreateTaskForm extends Model
     public $category;
     public $budget;
     public $ends_at;
+    public $location;
+    public $coordinates;
+    public $city;
 
     public function attributeLabels()
     {
@@ -25,7 +28,8 @@ class CreateTaskForm extends Model
             'category' => 'Категория',
             'budget' => 'Бюджет',
             'ends_at' => 'Срок исполнения',
-            'imageFile' => 'Файлы'
+            'imageFile' => 'Файлы',
+            'location' => 'Локация',
         ];
     }
 
@@ -33,6 +37,7 @@ class CreateTaskForm extends Model
     {
         return [
             [['title', 'description', 'category'], 'required'],
+            [['location', 'coordinates', 'city'], 'safe'],
             [['title', 'description'], 'trim'],
             ['title', 'string', 'min' => 10, 'max' => 255],
             ['description', 'string', 'min' => 30],

@@ -35,6 +35,10 @@ class ProcessingFormCreateTask
             $attachments->save();
         }
     }
+    private function splitCoordinates($coordinates)
+    {
+        return explode(' ', $coordinates);
+    }
 
     public function saveTask($form)
     {
@@ -42,6 +46,7 @@ class ProcessingFormCreateTask
         $this->saveImage();
 
         if ($form->validate()) {
+            $coordinates = $this->splitCoordinates($form->coordinates);
             $task = new Task();
             $task->title = $form->title;
             $task->description = $form->description;
@@ -49,6 +54,9 @@ class ProcessingFormCreateTask
             $task->author_id = Yii::$app->user->id;
             $task->ends_at = $form->ends_at;
             $task->category_id = $form->category;
+            $task->latitude_y = $coordinates[1];
+            $task->longitude_x = $coordinates[0];
+            $task->address = $form->location;
             $task->save();
 
             if (Yii::$app->session['imageFile']) {

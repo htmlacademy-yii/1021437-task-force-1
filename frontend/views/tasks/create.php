@@ -1,10 +1,14 @@
 <?php
+
+use frontend\assets\AutoCompleteAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Создайте новую задачу';
+AutoCompleteAsset::register($this);
 ?>
+
 <section class="create__task">
     <h1>Публикация нового задания</h1>
     <div class="create__task-main">
@@ -60,6 +64,26 @@ $this->title = 'Создайте новую задачу';
             <?php echo Yii::$app->session->getFlash('errorUploadFile'); ?>
         </div>
         <div class="create__file_error" style="color: #FF116E;display:none;">Прозошла ошибка при загрузке изображения</div>
+        <?= $form->field(
+            $model,
+            'location'
+        )->input(
+            'search',
+            [
+                'id' => 'autoComplete',
+                'autocomplete' => 'off',
+                'class' => 'input-navigation input-middle input',
+            ]
+        ); ?>
+        <?= Html::tag('span', 'Укажите адрес исполнения, если задание требует присутствия'); ?>
+        <?= $form->field(
+            $model,
+            'coordinates'
+        )->hiddenInput(['id' => 'coordinates'])->label(false); ?>
+        <?= $form->field(
+            $model,
+            'city'
+        )->hiddenInput(['id' => 'city'])->label(false); ?>
         <div class="create__price-time">
             <div class="create__price-time--wrapper">
                 <?= $form->field(
@@ -112,7 +136,6 @@ $this->title = 'Создайте новую задачу';
 </section>
 <script src="../js/dropzone.js"></script>
 <script>
-
     var dropzone = new Dropzone("div.create__file", {
         url: '/tasks/create',
         paramName: "Attach",
@@ -128,8 +151,6 @@ $this->title = 'Создайте новую задачу';
             this.on("success", function(file, response) {
                 document.querySelector('.create__file_error').style.display = 'none';
             });
-
-
         }
     });
 </script>
