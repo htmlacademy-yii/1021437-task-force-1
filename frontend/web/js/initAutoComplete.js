@@ -4,24 +4,14 @@ const autoCompleteJS = new autoComplete({
     src: async function () {
       const query = document.querySelector("#autoComplete").value;
       const source = await fetch(`/geocoder/coordinates?&query=${query}`);
-      const data = await source.json();
-      const response = data.response.GeoObjectCollection;
-      coordinationList = [];
-      // city = [];
-      var list = [];
-      $.each(response.featureMember, function(key, val) {
-        list.push(val.GeoObject.metaDataProperty.GeocoderMetaData.text);
-        coordinationList.push(val.GeoObject.Point.pos);
-        // if (val.GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.hasOwnProperty('SubAdministrativeArea')) {
-        //   debugger
-        //   city.push(val.GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName);
-        // }
-      });
-      return list;
+      return await source.json();
     },
+    key: ['text'],
+    cache: false
   },
   placeHolder: "Санкт-Петербург, Калининский район",
   searchEngine: "strict",
+  selector: "#autoComplete",
   highlight: true,
   maxResults: 10,
   debounce: 300,
@@ -50,8 +40,11 @@ const autoCompleteJS = new autoComplete({
     document.querySelector("#cities_list").appendChild(result);
   },
   onSelection: (feedback) => {
+    debugger
     document.querySelector("#autoComplete").blur();
-    document.querySelector("#autoComplete").value = feedback.selection.value;
-    document.querySelector("#coordinates").value = coordinationList[feedback.selection.index];
+    document.querySelector("#autoComplete").value = feedback.selection.value.text;
+    document.querySelector("#latitude").value = feedback.selection.value.latitude;
+    document.querySelector("#longitude").value = feedback.selection.value.longitude;
+    document.querySelector("#cityId").value = feedback.selection.value.city;
   },
 });

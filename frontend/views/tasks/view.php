@@ -47,9 +47,9 @@ if (!empty($task->address)) {
                             <div id="map" style="width: 361px; height: 292px"></div>
                         </div>
                         <div class="content-view__address">
-                            <span class="address__town">Москва</span><br>
-                            <span><?= $task->address; ?></span>
-                            <p>Вход под арку, код домофона 1122</p>
+                            <span class="address__town"><?= $task->city->city; ?></span><br>
+                            <span><?= Html::encode($task->address); ?></span>
+<!--                            <p>Вход под арку, код домофона 1122</p>-->
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,6 @@
 
 use frontend\assets\AutoCompleteAsset;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = 'Создайте новую задачу';
@@ -78,12 +77,16 @@ AutoCompleteAsset::register($this);
         <?= Html::tag('span', 'Укажите адрес исполнения, если задание требует присутствия'); ?>
         <?= $form->field(
             $model,
-            'coordinates'
-        )->hiddenInput(['id' => 'coordinates'])->label(false); ?>
+            'latitude'
+        )->hiddenInput(['id' => 'latitude'])->label(false); ?>
         <?= $form->field(
             $model,
-            'city'
-        )->hiddenInput(['id' => 'city'])->label(false); ?>
+            'longitude'
+        )->hiddenInput(['id' => 'longitude'])->label(false); ?>
+        <?= $form->field(
+            $model,
+            'cityId'
+        )->hiddenInput(['id' => 'cityId'])->label(false); ?>
         <div class="create__price-time">
             <div class="create__price-time--wrapper">
                 <?= $form->field(
