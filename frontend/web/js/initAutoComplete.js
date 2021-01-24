@@ -40,7 +40,6 @@ const autoCompleteJS = new autoComplete({
     document.querySelector("#cities_list").appendChild(result);
   },
   onSelection: (feedback) => {
-    debugger
     document.querySelector("#autoComplete").blur();
     document.querySelector("#autoComplete").value = feedback.selection.value.text;
     document.querySelector("#latitude").value = feedback.selection.value.latitude;

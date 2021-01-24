@@ -10,14 +10,12 @@ class GeocoderService
 
     private function getValueForQuery($city, $query)
     {
-        $url= $city . ', ' . $query;
-        return urlencode($url);
+        return urlencode($city . ', ' . $query);
     }
 
     public function getCityFromProfile()
     {
-        $city = City::find()->where(['id' => Yii::$app->user->identity->city_id])->asArray()->all();
-        return $city[0]["city"];
+        return Yii::$app->user->getIdentity()->city->city;
     }
 
     public function getInfoFromQuery($query)
@@ -45,5 +43,4 @@ class GeocoderService
         }
         return $cityList;
     }
-
 }
