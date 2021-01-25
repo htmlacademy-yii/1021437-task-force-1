@@ -7,7 +7,7 @@ use yii\web\Controller;
 
 class GeocoderController extends Controller
 {
-    public function actionCoordinates($query)
+    public function actionCoordinates(string $query): ?object
     {
         $geocoder = new GeocoderService();
         $data = $geocoder->getInfoFromQuery($query);
