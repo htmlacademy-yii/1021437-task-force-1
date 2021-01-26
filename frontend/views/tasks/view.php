@@ -1,12 +1,16 @@
 <?php
 
+use frontend\assets\MapAsset;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use Task\classes\utils\ViewRatingStars;
 use yii\widgets\ActiveForm;
 
-$this->title = 'Task №' . $idTask . ' | Title: ' . $task->title;
+$this->title = 'Task №' . $task->id . ' | Title: ' . $task->title;
 
+if (!empty($task->address)) {
+    MapAsset::register($this);
+}
 ?>
 <section class="content-view">
     <div class="content-view__card">
@@ -35,20 +39,21 @@ $this->title = 'Task №' . $idTask . ' | Title: ' . $task->title;
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <div class="content-view__location">
-                <h3 class="content-view__h3">Расположение</h3>
-                <div class="content-view__location-wrapper">
-                    <div class="content-view__map">
-                        <a href="#"><img src="/img/map.jpg" width="361" height="292"
-                                         alt="Москва, Новый арбат, 23 к. 1"></a>
-                    </div>
-                    <div class="content-view__address">
-                        <span class="address__town">Москва</span><br>
-                        <span>Новый арбат, 23 к. 1</span>
-                        <p>Вход под арку, код домофона 1122</p>
+            <?php if (!empty($task->address)): ?>
+                <div class="content-view__location">
+                    <h3 class="content-view__h3">Расположение</h3>
+                    <div class="content-view__location-wrapper">
+                        <div class="content-view__map">
+                            <div id="map" style="width: 361px; height: 292px"></div>
+                        </div>
+                        <div class="content-view__address">
+                            <span class="address__town"><?= $task->city->city; ?></span><br>
+                            <span><?= Html::encode($task->address); ?></span>
+<!--                            <p>Вход под арку, код домофона 1122</p>-->
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
         <div class="content-view__action-buttons">
             <?php if (($action->getPrivateName() === $currentTask::ACTION_RESPOND) && empty($response)): ?>

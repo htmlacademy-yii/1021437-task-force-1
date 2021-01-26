@@ -30,8 +30,6 @@ class TasksController extends SecuredController
 
     public function actionView($id)
     {
-        $idTask = $id;
-
         $task = Task::findOne($id);
         if (!$task) {
             throw new NotFoundHttpException("Задача с таким ID - $id не найдена");
@@ -59,11 +57,14 @@ class TasksController extends SecuredController
         }
 
         $response = $task->getResponseUser(Yii::$app->user->id);
+        if (!empty($task->address)) {
+            Yii::$app->view->registerJsVar('coordinates', [$task->latitude_y, $task->longitude_x]);
+        }
 
         return $this->render(
             'view',
             compact(
-            'idTask', 'task', 'modelResponse',
+            'task', 'modelResponse',
             'modelComplete', 'response', 'executorId',
             'currentTask', 'action'
             )

@@ -49,6 +49,10 @@ class ProcessingFormCreateTask
             $task->author_id = Yii::$app->user->id;
             $task->ends_at = $form->ends_at;
             $task->category_id = $form->category;
+            $task->latitude_y = $form->latitude;
+            $task->longitude_x = $form->longitude;
+            $task->address = $form->location;
+            $task->city_id = $form->cityId;
             $task->save();
 
             if (Yii::$app->session['imageFile']) {
