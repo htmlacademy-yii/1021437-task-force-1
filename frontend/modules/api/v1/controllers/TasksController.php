@@ -1,7 +1,7 @@
 <?php
 
 
-namespace frontend\modules\api\controllers;
+namespace frontend\modules\api\v1\controllers;
 
 use frontend\models\Task;
 use yii\rest\ActiveController;

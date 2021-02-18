@@ -17,8 +17,8 @@ return [
     'language' => 'ru-Ru',
     'sourceLanguage' => 'ru-RU',
     'modules' => [
-        'api' => [
-            'class' => 'frontend\modules\api\Module'
+        'v1' => [
+            'class' => 'frontend\modules\api\v1\Module'
         ]
     ],
     'components' => [
@@ -57,10 +57,7 @@ return [
             'rules' => [
                 [
                     'class' => UrlRule::class,
-                    'controller' => 'api/messages',
-                    'extraPatterns' => [
-                        'POST create' => \frontend\modules\api\resource\Message::class,
-                    ],
+                    'controller' => 'v1/messages'
                 ],
                 [
                     'class' => UrlRule::class,

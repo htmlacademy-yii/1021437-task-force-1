@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 $this->title = 'Task №' . $task->id . ' | Title: ' . $task->title;
 
 MapAsset::register($this);
+
 ?>
 <section class="content-view">
     <div class="content-view__card">
