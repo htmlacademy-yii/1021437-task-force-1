@@ -5,6 +5,7 @@ namespace frontend\modules\api\v1\controllers;
 use frontend\controllers\CreateNewMessage;
 use frontend\models\Message;
 
+use phpDocumentor\Reflection\Types\This;
 use Yii;
 use frontend\models\Task;
 use yii\rest\ActiveController;
@@ -32,11 +33,10 @@ class MessagesController extends ActiveController
         return $actions;
     }
 
-    public function actionCreate()
+    public function actionCreate($task_id)
     {
-
         $content = json_decode(Yii::$app->getRequest()->getRawBody(), true);
-        $task = Task::findOne($content['taskId']);
+        $task = Task::findOne($task_id);
 
         Yii::$app->response->setStatusCode(201);
         $message = new CreateNewMessage();
