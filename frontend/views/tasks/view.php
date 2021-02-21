@@ -8,9 +8,8 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Task №' . $task->id . ' | Title: ' . $task->title;
 
-if (!empty($task->address)) {
-    MapAsset::register($this);
-}
+MapAsset::register($this);
+
 ?>
 <section class="content-view">
     <div class="content-view__card">
@@ -141,7 +140,9 @@ if (!empty($task->address)) {
     </div>
     <div id="chat-container">
         <!--                    добавьте сюда атрибут task с указанием в нем id текущего задания-->
-        <chat class="connect-desk__chat"></chat>
+<!--        --><?php //if($task->status == $currentTask::STATUS_IN_WORK): ?>
+            <chat class="connect-desk__chat" task="<?= $task->id; ?>" author_id="<?=$task->author_id;?>" recipient_id="<?= $task->executor_id; ?>"></chat>
+<!--        --><?php //endif; ?>
     </div>
 </section>
 <section class="modal response-form form-modal" id="response-form">
