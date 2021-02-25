@@ -6,7 +6,7 @@ use frontend\models\Message;
 
 class CreateNewMessage
 {
-    public function saveMessage(object $task, string $content): ?object
+    public function saveMessage(object $task, string $content): ?Message
     {
         $message = new Message();
         $message->author_id = $task->author_id;

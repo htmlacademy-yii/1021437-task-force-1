@@ -4,12 +4,9 @@ namespace frontend\modules\api\v1\controllers;
 
 use frontend\controllers\CreateNewMessage;
 use frontend\models\Message;
-
-use phpDocumentor\Reflection\Types\This;
 use Yii;
 use frontend\models\Task;
 use yii\rest\ActiveController;
-
 
 class MessagesController extends ActiveController
 {
