@@ -62,9 +62,9 @@ $this->title = 'Профиль - ' . $user->name;
             </div>
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
-                <a href="#"><img src="/img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="/img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="/img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
+                <?php foreach ($user->userAttachments as $item): ?>
+                    <a href="#"><img src="<?= $item->image_link; ?>" width="85" height="86" alt="Фото работы"></a>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

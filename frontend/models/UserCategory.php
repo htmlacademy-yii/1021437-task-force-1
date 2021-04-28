@@ -68,4 +68,13 @@ class UserCategory extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Category::class, ['id' => 'categories_id']);
     }
+
+    public static function getUserCategories($user)
+    {
+        $categories = [];
+        foreach ($user->userCategories as $item) {
+            $categories[] = $item->categories_id;
+        }
+        return $categories;
+    }
 }
