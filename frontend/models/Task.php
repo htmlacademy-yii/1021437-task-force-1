@@ -106,6 +106,11 @@ class Task extends ActiveRecord
         return $this->hasMany(Message::class, ['task_id' => 'id']);
     }
 
+    public function getCountMessages()
+    {
+        return count($this->messages);
+    }
+
     /**
      * Gets query for [[Responses]].
      *

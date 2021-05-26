@@ -62,9 +62,9 @@ $this->title = 'Профиль - ' . $user->name;
             </div>
             <div class="user__card-photo">
                 <h3 class="content-view__h3">Фото работ</h3>
-                <a href="#"><img src="/img/rome-photo.jpg" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="/img/smartphone-photo.png" width="85" height="86" alt="Фото работы"></a>
-                <a href="#"><img src="/img/dotonbori-photo.png" width="85" height="86" alt="Фото работы"></a>
+                <?php foreach ($user->userAttachments as $item): ?>
+                    <a href="<?= $item->image_link; ?>"><img src="<?= $item->image_link; ?>" width="85" height="86" alt="Фото работы"></a>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@ $this->title = 'Профиль - ' . $user->name;
                 <div class="feedback-card__reviews">
                     <p class="link-task link">Задание
                         <a href="<?= Url::to(['tasks/view', 'id' => $item->id]); ?>"
-                           class="link-regular">«<?= $item->title; ?>»</a>
+                           class="link-regular">«<?= Html::encode($item->title); ?>»</a>
                     </p>
                     <div class="card__review">
                         <a href="#"><img src="/img/man-glasses.jpg" width="55" height="54"></a>

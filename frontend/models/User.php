@@ -230,6 +230,16 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasMany(UserCategory::class, ['user_id' => 'id']);
     }
 
+    public function getIdCategoriesUser()
+    {
+        $categories = [];
+        $id = $this->userCategories;
+        foreach ($id as $item) {
+            $categories[] = $item->categories_id;
+        }
+        return $categories;
+    }
+
     /**
      * Gets query for [[UserPreferences]].
      *

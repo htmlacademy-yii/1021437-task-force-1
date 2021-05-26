@@ -3,10 +3,11 @@
 
 namespace frontend\controllers;
 use frontend\models\Message;
+use frontend\models\Task;
 
 class CreateNewMessage
 {
-    public function saveMessage(object $task, string $content): ?object
+    public function saveMessage(Task $task, string $content): ?Message
     {
         $message = new Message();
         $message->author_id = $task->author_id;

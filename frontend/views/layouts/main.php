@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use frontend\widgets\NotificationWidget;
 use yii\helpers\Html;
 use frontend\assets\AppAsset;
 use yii\helpers\Url;
@@ -80,23 +81,9 @@ AppAsset::register($this);
                     </select>
                 </div>
                 <div class="header__lightbulb"></div>
-                <div class="lightbulb__pop-up">
-                    <h3>Новые события</h3>
-                    <p class="lightbulb__new-task lightbulb__new-task--message">
-                        Новое сообщение в чате
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--executor">
-                        Выбран исполнитель для
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                    <p class="lightbulb__new-task lightbulb__new-task--close">
-                        Завершено задание
-                        <a href="#" class="link-regular">«Помочь с курсовой»</a>
-                    </p>
-                </div>
+                <?= NotificationWidget::widget(); ?>
                 <div class="header__account">
-                    <a class="header__account-photo">
+                    <a class="header__account-photo" href="<?= Url::to(['/users/view/', 'id' => Yii::$app->user->id]); ?>">
                         <img src="/img/user-photo.png"
                              width="43" height="44"
                              alt="Аватар пользователя">
@@ -108,10 +95,10 @@ AppAsset::register($this);
                 <div class="account__pop-up">
                     <ul class="account__pop-up-list">
                         <li>
-                            <a href="#">Мои задания</a>
+                            <a href="<?= Url::to('/my-list'); ?> ">Мои задания</a>
                         </li>
                         <li>
-                            <a href="#">Настройки</a>
+                            <a href="<?= Url::to(['/users/settings']); ?>">Настройки</a>
                         </li>
                         <li>
                             <a href="<?= Url::to(['landing/logout']); ?>">Выход</a>
