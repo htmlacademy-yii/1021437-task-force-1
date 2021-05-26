@@ -28,6 +28,20 @@ class SettingsProfileForm extends Model
     {
         $user = User::findOne(\Yii::$app->user->getId());
         $this->avatar = $user->profile->avatar;
+        $this->name = $user->name;
+        $this->email = $user->email;
+        $this->dateBirthday = $user->profile->birthday_at;
+        $this->info = $user->profile->user_info;
+        $this->phone = $user->profile->phone;
+        $this->skype = $user->profile->skype;
+        $this->telegram = $user->profile->telegram;
+        $this->town = $user->city_id;
+        $this->notifications_new_message = $user->userPreferences[0]->notifications_new_message ?? '';
+        $this->notifications_task_actions = $user->userPreferences[0]['notifications_task_actions']  ?? '';
+        $this->notifications_new_review = $user->userPreferences[0]['notifications_new_review']  ?? '';
+        $this->public_contacts = $user->userPreferences[0]['public_contacts']  ?? '';
+        $this->hidden_profile = $user->userPreferences[0]['hidden_profile']  ?? '';
+        $this->categories = $user->getIdCategoriesUser();
     }
 
     public function rules()
@@ -64,10 +78,9 @@ class SettingsProfileForm extends Model
         if (empty($this->$attribute)) {
             return true;
         }
-
         foreach ($this->$attribute as $item) {
-            $categories = Category::findOne($item);
-            if (empty($categories->id)) {
+            $category = Category::findOne($item);
+            if ($category === null) {
                 $this->addError($attribute, 'Категории  - ' . $item . ' не существует');
             }
         }

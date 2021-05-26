@@ -39,14 +39,12 @@ class UsersController extends SecuredController
         return $this->render('view', compact('user'));
     }
 
-    public function actionSettings($id)
+    public function actionSettings()
     {
         $model = new SettingsProfileForm();
-        $user = User::findOne($id);
+        $user = User::findOne(Yii::$app->user->id);
         $cities = City::getListCities();
         $categories = Category::getNameCategories();
-        $currentCategories = UserCategory::getUserCategories($user);
-
         $service = new SettingsFormUpdate();
         $service->setImageForProfile($user);
 
@@ -56,8 +54,6 @@ class UsersController extends SecuredController
                 $service->saveProfile($user, $model);
             }
             $errors = $model->getErrors();
-        } else {
-            $service->getStockValueFromProfile($model, $user, $currentCategories);
         }
 
         return $this->render('settings', compact('model', 'errors', 'cities', 'categories'));

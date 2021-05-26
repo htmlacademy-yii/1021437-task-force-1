@@ -98,7 +98,7 @@ AppAsset::register($this);
                             <a href="<?= Url::to('/my-list'); ?> ">Мои задания</a>
                         </li>
                         <li>
-                            <a href="<?= Url::to(['/users/settings/', 'id' => Yii::$app->user->id]); ?>">Настройки</a>
+                            <a href="<?= Url::to(['/users/settings']); ?>">Настройки</a>
                         </li>
                         <li>
                             <a href="<?= Url::to(['landing/logout']); ?>">Выход</a>

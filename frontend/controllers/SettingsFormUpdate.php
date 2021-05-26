@@ -19,11 +19,11 @@ class SettingsFormUpdate
         }
     }
 
-    private function clearUserPortfolioImage($id)
+    private function clearUserPortfolioImage($id, $countFiles)
     {
         $countPhotos = UserAttachment::find()->where(['user_id' => $id])->count();
         if ($countPhotos >= 6) {
-            $photos = UserAttachment::find()->where(['user_id' => $id])->all();
+            $photos = UserAttachment::find()->where(['user_id' => $id])->limit($countFiles)->all();
             foreach ($photos as $item) {
                 $item->delete();
             }
@@ -102,25 +102,6 @@ class SettingsFormUpdate
         return $this->getCategoriesFromProfile($user->id);
     }
 
-    public function getStockValueFromProfile($model, $user, $currentCategories)
-    {
-        $model->name = $user->name;
-        $model->email = $user->email;
-        $model->town = $user->city_id;
-        $model->avatar = $user->profile->avatar;
-        $model->dateBirthday = $user->profile->birthday_at;
-        $model->info = $user->profile->user_info;
-        $model->phone = $user->profile->phone;
-        $model->skype = $user->profile->skype;
-        $model->telegram = $user->profile->telegram;
-        $model->notifications_new_message = $user->userPreferences[0]['notifications_new_message'];
-        $model->notifications_task_actions = $user->userPreferences[0]['notifications_task_actions'];
-        $model->notifications_new_review = $user->userPreferences[0]['notifications_new_review'];
-        $model->public_contacts = $user->userPreferences[0]['public_contacts'];
-        $model->hidden_profile = $user->userPreferences[0]['hidden_profile'];
-        $model->categories = $currentCategories;
-    }
-
     public function setAvatarUser($model, $user)
     {
         if (UploadedFile::getInstance($model, 'avatar')) {
@@ -154,8 +135,9 @@ class SettingsFormUpdate
     {
         if (\Yii::$app->request->getIsAjax()) {
             $files = UploadedFile::getInstancesByName('file');
+            $countFiles = count($files);
             if ($files) {
-                $this->clearUserPortfolioImage($user->id);
+                $this->clearUserPortfolioImage($user->id, $countFiles);
                 $this->saveProfileImages($files, $user);
             }
         }

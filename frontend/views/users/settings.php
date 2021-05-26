@@ -10,7 +10,7 @@ $this->title = 'Настройки аккаунта';
     <?php $form = ActiveForm::begin([
         'method' => 'POST',
         'id' => 'account',
-        'action' => ['users/settings/', 'id' => Yii::$app->request->get('id')],
+        'action' => ['users/settings/'],
         'options' => [
             'enctype' => 'multipart/form-data',
         ],
@@ -106,7 +106,6 @@ $this->title = 'Настройки аккаунта';
                     )->checkboxList(
                         $categories,
                         [
-                            'unselect' => null,
                             'tag' => false,
                             'item' => function($index, $label, $name, $checked, $value) {
                                 $checkedLabel = $checked ? 'checked' : '';
@@ -190,8 +189,7 @@ $this->title = 'Настройки аккаунта';
                         ]
                     )->checkbox(
                         [
-                            'class' => 'visually-hidden checkbox__input',
-                            'uncheck' => null
+                            'class' => 'visually-hidden checkbox__input'
                         ], false); ?>
                     <?= $form->field(
                         $model,
@@ -202,8 +200,7 @@ $this->title = 'Настройки аккаунта';
                         ]
                     )->checkbox(
                         [
-                            'class' => 'visually-hidden checkbox__input',
-                            'uncheck' => null
+                            'class' => 'visually-hidden checkbox__input'
                         ], false); ?>
                     <?= $form->field(
                         $model,
@@ -214,8 +211,7 @@ $this->title = 'Настройки аккаунта';
                         ]
                     )->checkbox(
                         [
-                            'class' => 'visually-hidden checkbox__input',
-                            'uncheck' => null
+                            'class' => 'visually-hidden checkbox__input'
                         ], false); ?>
                 </div>
                 <div class="search-task__categories account_checkbox account_checkbox--secrecy">
@@ -227,8 +223,7 @@ $this->title = 'Настройки аккаунта';
                             'template' => '{input}{label}'
                         ]
                     )->checkbox([
-                        'class' => 'visually-hidden checkbox__input',
-                        'uncheck' => null
+                        'class' => 'visually-hidden checkbox__input'
                     ], false); ?>
                     <?= $form->field(
                         $model,
@@ -238,8 +233,7 @@ $this->title = 'Настройки аккаунта';
                             'template' => '{input}{label}'
                         ]
                     )->checkbox([
-                        'class' => 'visually-hidden checkbox__input',
-                        'uncheck' => null
+                        'class' => 'visually-hidden checkbox__input'
                     ], false); ?>
                 </div>
             </div>
